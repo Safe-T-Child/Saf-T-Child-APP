@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: dist/saf-t-child/ # Updated to match the specified outputPath in angular.json
+          path: dist/saf-t-child/browser/ # Updated to match the specified outputPath in angular.json
 
   deploy:
     runs-on: ubuntu-latest
