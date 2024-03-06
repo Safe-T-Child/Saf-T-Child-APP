@@ -1,7 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { windowBreakpoint } from '../../../../../environment';
 import { MatDialog } from '@angular/material/dialog';
-import { EditModalComponent } from '../../modals/edit-modal/edit-modal.component';
 
 @Component({
   selector: 'app-devices',
@@ -11,15 +10,15 @@ import { EditModalComponent } from '../../modals/edit-modal/edit-modal.component
 export class DevicesComponent {
   constructor(public matDialog: MatDialog) {}
 
-  openDialog(): void {
-    const dialogRef = this.matDialog.open(EditModalComponent, {
-      width: '250px',
-      data: { inputData: 'your data' },
-    });
+  // openDialog(): void {
+  //   const dialogRef = this.matDialog.open(EditModalComponent, {
+  //     width: '250px',
+  //     data: { inputData: 'your data' },
+  //   });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      console.log(result);
-    });
-  }
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     console.log('The dialog was closed');
+  //     console.log(result);
+  //   });
+  // }
 }

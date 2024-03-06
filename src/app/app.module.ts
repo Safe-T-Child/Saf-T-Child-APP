@@ -14,7 +14,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './_components/dashboard/dashboard.component';
 import { CreateAccountComponent } from './_components/create-account/create-account.component';
 import { MatIconModule } from '@angular/material/icon';
-import { EditModalComponent } from './_components/modals/edit-modal/edit-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DevicesComponent } from './_components/dashboard/devices/devices.component';
@@ -37,7 +36,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FooterComponent,
     DashboardComponent,
     CreateAccountComponent,
-    EditModalComponent,
     DevicesComponent,
     VehiclesComponent,
     GroupsComponent,
