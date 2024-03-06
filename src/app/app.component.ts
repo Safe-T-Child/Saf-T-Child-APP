@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   providers: [UserAuthenticationService],
 })
 export class AppComponent {
-  title = 'Safe-T-Child';
+  title = 'saf-t-child';
   s = 'Capstone Project Team 7';
   // userAuthenticated = false;
 
