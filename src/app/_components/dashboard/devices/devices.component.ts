@@ -1,14 +1,23 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { windowBreakpoint } from '../../../../../environment';
 import { MatDialog } from '@angular/material/dialog';
+import { SafTChildProxyService } from '../../../_services/saft-t-child.service.proxy';
 
 @Component({
   selector: 'app-devices',
   templateUrl: './devices.component.html',
   styleUrl: './devices.component.scss',
+  providers: [SafTChildProxyService],
 })
 export class DevicesComponent {
-  constructor(public matDialog: MatDialog) {}
+  constructor(
+    public matDialog: MatDialog,
+    private safTChildProxyService: SafTChildProxyService,
+  ) {
+    this.safTChildProxyService.getUsers().subscribe((data) => {
+      console.log(data);
+    });
+  }
 
   // openDialog(): void {
   //   const dialogRef = this.matDialog.open(EditModalComponent, {

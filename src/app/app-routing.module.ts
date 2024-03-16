@@ -8,16 +8,22 @@ import { VehiclesComponent } from './_components/dashboard/vehicles/vehicles.com
 import { GroupsComponent } from './_components/dashboard/groups/groups.component';
 import { CreateAccountComponent } from './_components/create-account/create-account.component';
 import { AboutComponent } from './_components/about/about.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   { path: 'bootstrap-samples', component: BootstrapSamplesComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'create-account', component: CreateAccountComponent },
-  { path: 'about', component: AboutComponent},
+  {
+    path: 'create-account',
+    //canActivate: [AuthGuard],
+    component: CreateAccountComponent,
+  },
+  { path: 'about', component: AboutComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
     path: 'dashboard',
     component: DashboardComponent,
+    //canActivate: [AuthGuard],
     children: [
       { path: 'devices', component: DevicesComponent },
       { path: 'vehicles', component: VehiclesComponent },

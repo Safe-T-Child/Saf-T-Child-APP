@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { SafTChildServiceProxy } from './saft-t-child.service.proxy';
+import { SafTChildProxyService } from './saft-t-child.service.proxy';
 
 @Injectable({
   providedIn: 'root',
@@ -16,10 +16,10 @@ export class UserAuthenticationService {
     return !!token; // Returns true if token exists, false otherwise
   }
 
-  constructor(private safTChildServiceProxy: SafTChildServiceProxy) {}
+  constructor(private SafTChildProxyService: SafTChildProxyService) {}
 
   login(username: string, password: string): Observable<boolean> {
-    return this.safTChildServiceProxy.login(username, password).pipe(
+    return this.SafTChildProxyService.login(username, password).pipe(
       map((response) => {
         console.log(response);
         const isAuthenticated = Boolean(response); // or any other logic based on your response structure

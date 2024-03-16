@@ -1,6 +1,6 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { windowBreakpoint } from '../../../../environment';
-import { SafTChildServiceProxy } from '../../_services/saft-t-child.service.proxy';
+import { SafTChildProxyService } from '../../_services/saft-t-child.service.proxy';
 import { Router } from '@angular/router';
 import {
   AbstractControl,
@@ -14,7 +14,7 @@ import {
   selector: 'app-about',
   templateUrl: './about.component.html',
   styleUrl: './about.component.scss',
-  providers: [SafTChildServiceProxy],
+  providers: [SafTChildProxyService],
 })
 export class AboutComponent implements OnInit {
   // Class binding property
@@ -32,7 +32,7 @@ export class AboutComponent implements OnInit {
     this.isMobile = window.innerWidth < windowBreakpoint;
   }
   constructor(
-    private safTChildServiceProxy: SafTChildServiceProxy,
+    private SafTChildProxyService: SafTChildProxyService,
     private fb: FormBuilder,
     private router: Router,
   ) {}

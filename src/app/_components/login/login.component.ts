@@ -1,6 +1,6 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { windowBreakpoint } from '../../../../environment';
-import { SafTChildServiceProxy } from '../../_services/saft-t-child.service.proxy';
+import { SafTChildProxyService } from '../../_services/saft-t-child.service.proxy';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserAuthenticationService } from '../../_services/user-authentication.service';
@@ -8,7 +8,7 @@ import { UserAuthenticationService } from '../../_services/user-authentication.s
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
-  providers: [SafTChildServiceProxy, UserAuthenticationService],
+  providers: [SafTChildProxyService, UserAuthenticationService],
 })
 export class LoginComponent implements OnInit {
   // Class binding property
@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
     });
 
     this.contentActive = true;
-    this.safTChildServiceProxy.getDeviceInfo().subscribe((data) => {
+    this.SafTChildProxyService.getDeviceInfo().subscribe((data) => {
       console.log(data);
     });
   }
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
     this.isMobile = window.innerWidth < windowBreakpoint;
   }
   constructor(
-    private safTChildServiceProxy: SafTChildServiceProxy,
+    private SafTChildProxyService: SafTChildProxyService,
     private router: Router,
     private userAuthenticationService: UserAuthenticationService,
   ) {}
