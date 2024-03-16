@@ -1,5 +1,5 @@
 <div
-  class="content d-flex justify-content-center align-items-center"
+  class="content d-flex justify-content-center align-items-center p-5"
   [class.active]="contentActive"
 >
   <div
@@ -20,8 +20,10 @@
         >
       </div>
     </div>
+
     <form [formGroup]="formGroup" class="d-flex flex-column gap-2">
-      <div class="form-group">
+      <p>**All fields are required.</p>
+      <div class="form-box">
         <label for="firstName" class="form-label">First Name</label>
         <input
           type="text"
@@ -38,7 +40,7 @@
         </span>
       </div>
 
-      <div class="form-group">
+      <div class="form-box">
         <label for="lastName" class="form-label">Last Name</label>
         <input
           type="text"
@@ -52,8 +54,9 @@
         </span>
       </div>
 
-      <div class="form-group">
+      <div class="form-box">
         <label for="email" class="form-label">Email</label>
+
         <input
           type="email"
           class="form-control"
@@ -67,29 +70,55 @@
         >
           Please enter a valid email address.
         </span>
+        <span
+          *ngIf="
+            !email.errors?.['email'] &&
+            email.errors?.['emailTaken'] &&
+            email.touched
+          "
+          class="text-danger"
+        >
+          Email address associated to existing account.
+        </span>
       </div>
-
-      <div class="form-group">
-        <label for="phoneNumber" class="form-label">Phone Number</label>
+      <!-- TODO: only allow numbers to be inputed -->
+      <div class="form-box">
+        <label
+          for="phoneNumber"
+          class="form-label"
+          matTooltip="Only digits, no - or () or spaces. Ex: 5029998888"
+          matTooltipPosition="right"
+          matTooltipTouchGestures="on"
+          >Phone Number</label
+        >
         <input
           type="text"
           class="form-control"
           id="phoneNumber"
-          placeholder="123-456-7890"
+          placeholder="5029998888"
           formControlName="phoneNumber"
         />
         <span
           *ngIf="
-            phoneNumber.errors?.['invalidAmericanPhoneNumber'] &&
-            phoneNumber.touched
+            phoneNumber.errors?.['invalidPhoneNumber'] && phoneNumber.touched
           "
           class="text-danger"
         >
-          Please enter a valid American phone number.
+          Please enter a valid phone number.
+        </span>
+        <span
+          *ngIf="
+            !phoneNumber.errors?.['invalidPhoneNumber'] &&
+            phoneNumber.touched &&
+            phoneNumber.errors?.['phoneNumberTaken']
+          "
+          class="text-danger"
+        >
+          Phone number associated to existing account.
         </span>
       </div>
 
-      <div class="form-group">
+      <div class="form-box">
         <label for="username" class="form-label">Username</label>
         <input
           class="form-control"
@@ -101,15 +130,23 @@
         <span
           *ngIf="
             formGroup.get('username')?.invalid &&
-            formGroup.get('username')?.touched
+            formGroup.get('username')?.touched &&
+            !formGroup.get('username')?.errors?.['usernameTaken']
           "
           class="text-danger"
         >
-          Please choose a username.
+          Enter valid username.
+        </span>
+        <!-- Specific error message for usernameTaken error -->
+        <span
+          *ngIf="formGroup.get('username')?.errors?.['usernameTaken']"
+          class="text-danger"
+        >
+          This username is already taken. Please choose a different one.
         </span>
       </div>
 
-      <div class="form-group">
+      <div class="form-box">
         <label for="password" class="form-label">Password</label>
         <input
           type="password"
@@ -121,17 +158,29 @@
         <span
           *ngIf="
             formGroup.get('password')?.invalid &&
-            formGroup.get('password')?.touched
+            formGroup.get('password')?.touched &&
+            !formGroup.get('password')?.errors?.['invalidPassword']
           "
           class="text-danger"
         >
           Password is required.
+        </span>
+        <span
+          *ngIf="
+            formGroup.get('password')?.errors?.['invalidPassword'] &&
+            formGroup.get('password')?.invalid &&
+            formGroup.get('password')?.touched
+          "
+          class="text-danger"
+        >
+          Invalid password.
         </span>
       </div>
       <button
         type="button"
         class="btn btn-primary btn-main-aqua"
         (click)="createAccount()"
+        [disabled]="formGroup.status === 'INVALID'"
         *ngIf="!isLoading; else loadingTemplate"
       >
         Create Account
