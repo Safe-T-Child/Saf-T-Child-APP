@@ -1,0 +1,70 @@
+<h2 mat-dialog-title>Add New Device</h2>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="form-box">
+      <label for="activationCode">Device Activation Code</label>
+      <input
+        type="number"
+        id="activationCode"
+        [formControl]="activationCode"
+        class="form-control"
+      />
+    </div>
+    <div
+      id="success-device"
+      class="d-flex align-items-center"
+      *ngIf="device.value"
+    >
+      <span class="material-icons" style="color: green"
+        >check_circle_outline</span
+      >
+      <p style="margin-bottom: 0px">Device found</p>
+    </div>
+    <div class="form-box">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        class="form-control"
+      />
+    </div>
+    <div class="form-box">
+      <label for="group">Group</label>
+      <select id="group" formControlName="group" class="form-select">
+        <option value="null" selected *ngIf="!group.value" hidden>
+          Select a group
+        </option>
+        <option *ngFor="let g of groups" [ngValue]="g">{{ g.name }}</option>
+      </select>
+      <p *ngIf="group.disabled">
+        Add a new <a (click)="addNew('groups')" class="link-style">group</a>
+      </p>
+    </div>
+    <div class="form-box">
+      <label for="vehicle">Vehicle</label>
+      <select class="form-select" id="vehicle" formControlName="vehicle">
+        <option value="null" selected *ngIf="!vehicle.value" hidden>
+          Select a vehicle
+        </option>
+        <option *ngFor="let v of vehicles" [ngValue]="v">{{ v.name }}</option>
+      </select>
+      <p *ngIf="vehicle.disabled">
+        Add a new <a (click)="addNew('vehicles')" class="link-style">vehicle</a>
+      </p>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="gap-1" style="padding: 24px; padding-top: 6px">
+  <button
+    class="btn btn-primary"
+    type="submit"
+    (click)="onSave()"
+    [disabled]="name.value === '' || device.value === null"
+  >
+    Save
+  </button>
+  <button class="btn btn-secondary" type="button" (click)="onClose()">
+    Close
+  </button>
+</mat-dialog-actions>

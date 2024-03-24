@@ -25,6 +25,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DevicesModalComponent } from './_components/modals/devices-modal/devices-modal.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     GroupsComponent,
     AboutComponent,
     VehiclesModalComponent,
+    DevicesModalComponent,
   ],
   imports: [
     BrowserModule,
