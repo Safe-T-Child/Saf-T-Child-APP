@@ -1,42 +1,18 @@
 <button matTooltip="Add Item" class="btn">
-  <span class="material-icons">add</span>
+  <span class="material-icons" (click)="openDialog()">add</span>
 </button>
 <div class="list-group gap-3">
-  <!-- Device Item 1 -->
-  <div class="card device-pill">
+  <div class="card device-pill" *ngFor="let device of devices">
     <div class="card-body">
       <div class="d-flex w-100 justify-content-between align-items-center">
-        <h2 class="mb-1">Volco XC40 Blue</h2>
+        <h2 class="mb-1">{{ device.name }}</h2>
         <div class="d-flex align-items-center gap-3">
-          <small class="badge bg-danger">Offline</small>
-          <div class="dropdown">
-            <button
-              class="btn d-flex align-items-center justify-content-center"
-              type="button"
-              id="dropdownMenuButton"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <span class="material-icons">more_vert</span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <li><a class="dropdown-item" href="#">Option 1</a></li>
-              <li><a class="dropdown-item" href="#">Option 2</a></li>
-              <li><a class="dropdown-item" href="#">Option 3</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <p class="mb-1">Some details about the device...</p>
-    </div>
-  </div>
-  <!-- Device Item 2 -->
-  <div class="card device-pill">
-    <div class="card-body">
-      <div class="d-flex w-100 justify-content-between align-items-center">
-        <h2 class="mb-1">Dad's Gray Camry</h2>
-        <div class="d-flex align-items-center gap-3">
-          <small class="badge bg-success">Active</small>
+          <small
+            class="badge"
+            [ngClass]="device.status === 'Active' ? 'bg-success' : 'bg-danger'"
+          >
+            {{ device.status }}
+          </small>
           <div class="dropdown">
             <button
               class="btn d-flex align-items-center justify-content-center"
@@ -62,7 +38,6 @@
           </div>
         </div>
       </div>
-      <p class="mb-1">Some details about the device...</p>
     </div>
   </div>
 </div>

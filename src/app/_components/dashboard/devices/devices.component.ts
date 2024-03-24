@@ -2,6 +2,11 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { windowBreakpoint } from '../../../../../environment';
 import { MatDialog } from '@angular/material/dialog';
 import { SafTChildProxyService } from '../../../_services/saft-t-child.service.proxy';
+import { VehiclesModalComponent } from '../../modals/vehicles-modal/vehicles-modal.component';
+import { DevicesModalComponent } from '../../modals/devices-modal/devices-modal.component';
+import { UserAuthenticationService } from '../../../_services/user-authentication.service';
+import * as SafTChildCore from '../../../_models/Saf-T-Child';
+import { NamedDocumentKey } from '../../../_models/base';
 
 @Component({
   selector: 'app-devices',
@@ -10,24 +15,42 @@ import { SafTChildProxyService } from '../../../_services/saft-t-child.service.p
   providers: [SafTChildProxyService],
 })
 export class DevicesComponent {
+  user: NamedDocumentKey = {
+    id: localStorage.getItem('userId') || '',
+    name: localStorage.getItem('name') || '',
+  };
+  devices: SafTChildCore.Device[] = [];
+
   constructor(
     public matDialog: MatDialog,
     private safTChildProxyService: SafTChildProxyService,
+    private userAuthenticationService: UserAuthenticationService,
   ) {
-    this.safTChildProxyService.getUsers().subscribe((data) => {
-      console.log(data);
+    this.safTChildProxyService
+      .getDevicesByOwnerId(this.user.id)
+      .subscribe((devices) => {
+        this.devices = devices;
+      });
+
+    this.safTChildProxyService.getDevices().subscribe((devices) => {
+      console.log(devices);
     });
   }
 
-  // openDialog(): void {
-  //   const dialogRef = this.matDialog.open(EditModalComponent, {
-  //     width: '250px',
-  //     data: { inputData: 'your data' },
-  //   });
+  openDialog(): void {
+    const dialogRef = this.matDialog.open(DevicesModalComponent, {
+      width: '250px',
+      data: { inputData: 'your data' },
+    });
 
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     console.log('The dialog was closed');
-  //     console.log(result);
-  //   });
-  // }
+    dialogRef.afterClosed().subscribe((result) => {
+      this.safTChildProxyService
+        .getDevicesByOwnerId(this.user.id)
+        .subscribe((devices) => {
+          this.devices = devices;
+        });
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+  }
 }

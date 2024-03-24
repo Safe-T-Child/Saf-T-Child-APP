@@ -25,7 +25,8 @@ export class UserAuthenticationService {
         const isAuthenticated = Boolean(response); // or any other logic based on your response structure
         if (isAuthenticated) {
           localStorage.setItem('userToken', 'yourTokenValue'); // Set actual token value here
-          console.log(this.checkInitialAuthState);
+          localStorage.setItem('userId', '65f5ed8aeb4ca31830d949f5');
+          localStorage.setItem('name', 'TestFirstName TestLastName');
         }
         return isAuthenticated;
       }),

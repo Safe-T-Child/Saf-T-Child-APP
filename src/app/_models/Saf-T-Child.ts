@@ -1,3 +1,5 @@
+import { NamedDocumentKey } from './base';
+
 enum UserType {
   Owner = 'owner',
   Secondary = 'secondary',
@@ -19,3 +21,34 @@ export interface User {
   secondaryPhoneNumbers: PhoneNumber[]; // Optional for all users
   isEmailVerified: boolean; // Required for all users
 }
+
+export interface Device {
+  id?: string; // UUID
+  type: string;
+  name: string;
+  model: string;
+  deviceId: string;
+  car?: NamedDocumentKey;
+  owner: NamedDocumentKey;
+  status: string;
+  group?: NamedDocumentKey;
+}
+
+export interface Group {
+  id?: string; // UUID
+  name: string;
+  owner: NamedDocumentKey;
+  users: NamedDocumentKey[];
+}
+
+export interface Vehicle {
+  id?: string; // UUID
+  name: string;
+  make: string;
+  model: string;
+  year: number;
+  licensePlate: string;
+  owner: NamedDocumentKey;
+}
+
+export interface Device {}

@@ -6,7 +6,7 @@
       <input
         type="text"
         matInput
-        [formControl]="name"
+        [formControl]="carSuggestion"
         [matAutocomplete]="auto"
       />
 
@@ -19,16 +19,61 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <label>Name</label>
-    <input type="text" name="" id="" />
-    <label>Make</label>
-    <input type="text" name="" id="" />
-    <label>Model</label>
-    <input type="text" name="" id="" />
-    <label>Year</label>
-    <input type="text" name="" id="" />
-    <label>Color</label>
-    <input type="text" name="" id="" />
+    <p>**All fields are required.</p>
+    <div class="form-box">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        formControlName="name"
+        id="name"
+        class="form-control"
+      />
+    </div>
+    <div class="form-box">
+      <label for="make">Make</label>
+      <input
+        type="text"
+        formControlName="make"
+        id="make"
+        class="form-control"
+      />
+    </div>
+    <div class="form-box">
+      <label for="model">Model</label>
+      <input
+        type="text"
+        formControlName="model"
+        id="model"
+        class="form-control"
+      />
+    </div>
+    <div class="form-box">
+      <label for="year">Year</label>
+      <input
+        type="number"
+        formControlName="year"
+        id="year"
+        class="form-control"
+      />
+    </div>
+    <div class="form-box">
+      <label for="color">Color </label>
+      <input
+        type="text"
+        formControlName="color"
+        id="color"
+        class="form-control"
+      />
+    </div>
+    <div class="form-box">
+      <label for="licensePlate">License Plate </label>
+      <input
+        type="text"
+        formControlName="licensePlate"
+        id="licensePlate"
+        class="form-control"
+      />
+    </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions class="gap-1" style="padding: 24px; padding-top: 6px">

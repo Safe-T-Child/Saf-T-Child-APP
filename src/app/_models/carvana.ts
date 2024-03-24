@@ -9,6 +9,11 @@ export interface Suggestion {
 
 export interface Filter {
   makes: CarDetails[];
+  colors: string[];
+  year: {
+    max: number;
+    min: number;
+  };
 }
 
 export interface CarDetails {
