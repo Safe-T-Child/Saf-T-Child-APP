@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { windowBreakpoint } from '../../../../../environment';
 import { MatDialog } from '@angular/material/dialog';
-import { SafTChildProxyService } from '../../../_services/saft-t-child.service.proxy';
+import { SafTChildProxyService } from '../../../_services/saf-t-child.service.proxy';
 import { VehiclesModalComponent } from '../../modals/vehicles-modal/vehicles-modal.component';
 import { DevicesModalComponent } from '../../modals/devices-modal/devices-modal.component';
 import { UserAuthenticationService } from '../../../_services/user-authentication.service';
@@ -16,7 +16,7 @@ import { NamedDocumentKey } from '../../../_models/base';
 })
 export class DevicesComponent {
   user: NamedDocumentKey = {
-    id: localStorage.getItem('userId') || '',
+    id: this.userAuthenticationService.getUserId() || '',
     name: localStorage.getItem('name') || '',
   };
   devices: SafTChildCore.Device[] = [];
@@ -31,10 +31,6 @@ export class DevicesComponent {
       .subscribe((devices) => {
         this.devices = devices;
       });
-
-    this.safTChildProxyService.getDevices().subscribe((devices) => {
-      console.log(devices);
-    });
   }
 
   openDialog(): void {

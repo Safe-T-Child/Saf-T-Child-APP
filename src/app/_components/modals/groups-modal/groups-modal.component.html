@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>Add New Family Member</h2>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <div
+      id="success-device"
+      class="d-flex align-items-center"
+      *ngIf="device.value"
+    >
+      <span class="material-icons" style="color: green"
+        >check_circle_outline</span
+      >
+      <p style="margin-bottom: 0px">Device found</p>
+    </div>
+    <div class="form-box">
+      <label for="firstName">First Name</label>
+      <input
+        type="text"
+        id="firstName"
+        formControlName="firstName"
+        class="form-control"
+      />
+    </div>
+    <div class="form-box">
+      <label for="lastName">Last Name</label>
+      <input
+        type="text"
+        id="lastName"
+        formControlName="lastName"
+        class="form-control"
+      />
+    </div>
+    <div class="form-box">
+      <label for="email">Email</label>
+      <input
+        type="text"
+        id="email"
+        formControlName="email"
+        class="form-control"
+      />
+    </div>
+    <div class="form-box">
+      <label for="phoneNumber">Phone Number</label>
+      <input
+        type="number"
+        id="phoneNumber"
+        formControlName="phoneNumber"
+        class="form-control"
+      />
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions id="buttons-footer" class="gap-1">
+  <button class="btn btn-primary" type="submit" (click)="onSave()">Save</button>
+  <button class="btn btn-secondary" type="button" (click)="onClose()">
+    Close
+  </button>
+</mat-dialog-actions>

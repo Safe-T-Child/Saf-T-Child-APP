@@ -10,10 +10,11 @@ import { ModalGuardService } from '../../../_services/modal-guard.service';
 import * as _ from 'lodash';
 import { NamedDocumentKey } from '../../../_models/base';
 import { Group, Vehicle } from '../../../_models/Saf-T-Child';
-import { SafTChildProxyService } from '../../../_services/saft-t-child.service.proxy';
+import { SafTChildProxyService } from '../../../_services/saf-t-child.service.proxy';
 import { forkJoin } from 'rxjs';
 import * as SafTChildCore from '../../../_models/Saf-T-Child';
 import { Router } from '@angular/router';
+import { UserAuthenticationService } from '../../../_services/user-authentication.service';
 
 @Component({
   selector: 'app-devices-modal',
@@ -22,8 +23,8 @@ import { Router } from '@angular/router';
 })
 export class DevicesModalComponent implements OnInit, OnDestroy {
   user: NamedDocumentKey = {
-    id: localStorage.getItem('userId') || '',
-    name: localStorage.getItem('name') || '',
+    id: this.userAuthenticationService.getUserId() || '',
+    name: this.userAuthenticationService.getFirstName() || '',
   };
   activationCode: FormControl<string | null> = new FormControl<string | null>(
     null,
@@ -63,6 +64,7 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private modalGuardService: ModalGuardService,
     private saftTChildProxyService: SafTChildProxyService,
+    private userAuthenticationService: UserAuthenticationService,
     private router: Router,
     private matDialog: MatDialog,
   ) {
