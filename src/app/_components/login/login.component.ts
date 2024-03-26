@@ -1,6 +1,6 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { windowBreakpoint } from '../../../../environment';
-import { SafTChildProxyService } from '../../_services/saft-t-child.service.proxy';
+import { SafTChildProxyService } from '../../_services/saf-t-child.service.proxy';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserAuthenticationService } from '../../_services/user-authentication.service';
@@ -8,7 +8,7 @@ import { UserAuthenticationService } from '../../_services/user-authentication.s
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
-  providers: [SafTChildProxyService, UserAuthenticationService],
+  providers: [UserAuthenticationService],
 })
 export class LoginComponent implements OnInit {
   // Class binding property
@@ -40,16 +40,12 @@ export class LoginComponent implements OnInit {
     });
 
     this.contentActive = true;
-    this.SafTChildProxyService.getDeviceInfo().subscribe((data) => {
-      console.log(data);
-    });
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
     this.isMobile = window.innerWidth < windowBreakpoint;
   }
   constructor(
-    private SafTChildProxyService: SafTChildProxyService,
     private router: Router,
     private userAuthenticationService: UserAuthenticationService,
   ) {}
@@ -58,13 +54,13 @@ export class LoginComponent implements OnInit {
     this.isLoading = true;
     this.userAuthenticationService
       .login(this.username.value, this.password.value)
-      .subscribe((isAuthenticated) => {
-        if (isAuthenticated) {
+      .subscribe((response) => {
+        this.isLoading = false;
+        if (response) {
           this.router.navigate(['/dashboard']);
         } else {
           this.showInvalidLogin = true;
         }
-        this.isLoading = false;
       });
   }
 }

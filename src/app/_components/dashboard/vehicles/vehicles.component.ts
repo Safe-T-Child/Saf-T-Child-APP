@@ -14,7 +14,7 @@ export class VehiclesComponent implements OnInit {
   }
   openDialog(): void {
     const dialogRef = this.matDialog.open(VehiclesModalComponent, {
-      width: '250px',
+      width: '300px',
       data: { inputData: 'your data' },
     });
 

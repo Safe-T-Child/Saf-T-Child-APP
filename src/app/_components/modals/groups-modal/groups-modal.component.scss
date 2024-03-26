@@ -1,0 +1,15 @@
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#success-device {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+#buttons-footer {
+  padding: 24px;
+  padding-top: 6px;
+}

@@ -1,6 +1,6 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { windowBreakpoint } from '../../../../environment';
-import { SafTChildProxyService } from '../../_services/saft-t-child.service.proxy';
+import { SafTChildProxyService } from '../../_services/saf-t-child.service.proxy';
 import { Router } from '@angular/router';
 
 import {

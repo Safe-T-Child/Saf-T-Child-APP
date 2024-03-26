@@ -22,6 +22,14 @@ export interface User {
   isEmailVerified: boolean; // Required for all users
 }
 
+export interface TempUser {
+  id?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  primaryPhoneNumber: PhoneNumber;
+}
+
 export interface Device {
   id?: string; // UUID
   type: string;

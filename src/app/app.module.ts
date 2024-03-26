@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -9,7 +8,7 @@ import { MobileHeaderComponent } from './mobile-view/_components/mobile-header/m
 import { LoginComponent } from './_components/login/login.component';
 import { DesktopHeaderComponent } from './desktop-view/_components/desktop-header/desktop-header.component';
 import { FooterComponent } from './_components/footer/footer.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './_components/dashboard/dashboard.component';
 import { CreateAccountComponent } from './_components/create-account/create-account.component';
@@ -26,6 +25,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DevicesModalComponent } from './_components/modals/devices-modal/devices-modal.component';
+import { GroupsModalComponent } from './_components/modals/groups-modal/groups-modal.component';
+import { AuthInterceptor } from './_guards/auth-interceptor';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { DevicesModalComponent } from './_components/modals/devices-modal/device
     AboutComponent,
     VehiclesModalComponent,
     DevicesModalComponent,
+    GroupsModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,7 +60,13 @@ import { DevicesModalComponent } from './_components/modals/devices-modal/device
     MatInputModule,
     BrowserAnimationsModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
