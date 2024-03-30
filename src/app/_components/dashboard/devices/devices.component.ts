@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { windowBreakpoint } from '../../../../../environment';
+import { windowBreakpoint } from '../../../environment';
 import { MatDialog } from '@angular/material/dialog';
 import { SafTChildProxyService } from '../../../_services/saf-t-child.service.proxy';
 import { VehiclesModalComponent } from '../../modals/vehicles-modal/vehicles-modal.component';

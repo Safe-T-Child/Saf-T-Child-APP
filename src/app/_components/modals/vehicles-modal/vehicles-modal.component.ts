@@ -17,6 +17,12 @@ import _ from 'lodash';
 import { CarvanaProxyService } from '../../../_services/carvana.service.proxy';
 import { Observable, debounceTime, map, of, startWith, switchMap } from 'rxjs';
 import * as Carvana from '../../../_models/carvana';
+import { NamedDocumentKey } from '../../../_models/base';
+import * as SafTChildCore from '../../../_models/Saf-T-Child';
+import { Router } from '@angular/router';
+import { SafTChildProxyService } from '../../../_services/saf-t-child.service.proxy';
+import { UserAuthenticationService } from '../../../_services/user-authentication.service';
+
 @Component({
   selector: 'app-vehicles-modal',
   templateUrl: './vehicles-modal.component.html',
@@ -24,6 +30,10 @@ import * as Carvana from '../../../_models/carvana';
   providers: [CarvanaProxyService],
 })
 export class VehiclesModalComponent implements OnInit, OnDestroy {
+  user: NamedDocumentKey = {
+    id: this.userAuthenticationService.getUserId() || '',
+    name: this.userAuthenticationService.getFirstName() || '',
+  };
   name: FormControl<string | null> = new FormControl<string | null>(
     null,
     Validators.required,
@@ -70,6 +80,9 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private modalGuardService: ModalGuardService,
     private carvanaProxyService: CarvanaProxyService,
+    private safTChildProxyService: SafTChildProxyService,
+    private router: Router,
+    private userAuthenticationService: UserAuthenticationService,
   ) {
     this.form.valueChanges.subscribe((form) => {
       if (!form) {
@@ -78,10 +91,7 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
       if (_.every(form, _.isEmpty)) {
         return;
       }
-      // Avoid saving empty form state
-      // this.saveFormState();
     });
-    // this.restoreFormState();
 
     this.filteredOptions = this.carSuggestion.valueChanges.pipe(
       startWith(''),
@@ -133,24 +143,6 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  saveFormState(): void {
-    localStorage.setItem('formState', JSON.stringify(this.form.value));
-  }
-
-  restoreFormState(): void {
-    const savedFormState = JSON.parse(
-      localStorage.getItem('formState') || '{}',
-    );
-    if (!_.isEmpty(savedFormState)) {
-      this.form.patchValue(savedFormState);
-      this.form.markAsDirty();
-    }
-  }
-
-  clearDataFromLocalstorage(): void {
-    localStorage.removeItem('formState');
-  }
-
   ngOnInit(): void {
     window.addEventListener(
       'beforeunload',
@@ -163,6 +155,43 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
       'beforeunload',
       this.preventUnsavedChanges.bind(this),
     );
+  }
+
+  onSave() {
+    const formControls = this.form.controls;
+    const vehicle: SafTChildCore.Vehicle = {
+      name: '',
+      make: '',
+      model: '',
+      year: 0, //just a placeholder
+      color: '',
+      licensePlate: '',
+      owner: {
+        id: '',
+        name: '',
+      },
+    };
+
+    vehicle.name = formControls['name'].value;
+    vehicle.make = formControls['make'].value;
+    vehicle.model = formControls['model'].value;
+    vehicle.year = formControls['year'].value;
+    vehicle.color = formControls['color'].value;
+    vehicle.licensePlate = formControls['licensePlate'].value;
+    vehicle.owner = this.user;
+
+    this.safTChildProxyService.insertNewVehicle(vehicle).subscribe({
+      next: (vehicle) => {
+        this.dialogRef.close({
+          action: 'save',
+          data: vehicle,
+        });
+      },
+      error: (e) => {
+        console.log('error occured');
+        console.log(e);
+      },
+    });
   }
 
   @HostListener('window:beforeunload', ['$event'])
@@ -189,10 +218,9 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
 
   onClose(): void {
     if (this.modalGuardService.canDeactivate(this.form)) {
-      this.clearDataFromLocalstorage();
       this.dialogRef.close({
         action: 'close',
-        data: null, // Or any other data you wish to return
+        data: null,
       });
     }
   }
