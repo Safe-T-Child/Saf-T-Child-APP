@@ -4,7 +4,7 @@ export const environment = (() => {
     production,
     safTChildApiUrl: production
       ? 'https://api.safTChild.com'
-      : 'https://localhost:7164',
+      : 'https://localhost:5001',
   };
 })();
 

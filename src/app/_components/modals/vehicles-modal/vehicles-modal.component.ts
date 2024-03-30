@@ -17,6 +17,12 @@ import _ from 'lodash';
 import { CarvanaProxyService } from '../../../_services/carvana.service.proxy';
 import { Observable, debounceTime, map, of, startWith, switchMap } from 'rxjs';
 import * as Carvana from '../../../_models/carvana';
+import { NamedDocumentKey } from '../../../_models/base';
+import * as SafTChildCore from '../../../_models/Saf-T-Child';
+import { Router } from '@angular/router';
+import { SafTChildProxyService } from '../../../_services/saf-t-child.service.proxy';
+import { UserAuthenticationService } from '../../../_services/user-authentication.service';
+
 @Component({
   selector: 'app-vehicles-modal',
   templateUrl: './vehicles-modal.component.html',
@@ -24,6 +30,10 @@ import * as Carvana from '../../../_models/carvana';
   providers: [CarvanaProxyService],
 })
 export class VehiclesModalComponent implements OnInit, OnDestroy {
+  user: NamedDocumentKey = {
+    id: this.userAuthenticationService.getUserId() || '',
+    name: this.userAuthenticationService.getFirstName() || '',
+  };
   name: FormControl<string | null> = new FormControl<string | null>(
     null,
     Validators.required,
@@ -70,6 +80,9 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private modalGuardService: ModalGuardService,
     private carvanaProxyService: CarvanaProxyService,
+    private safTChildProxyService: SafTChildProxyService,
+    private router: Router,
+    private userAuthenticationService: UserAuthenticationService,
   ) {
     this.form.valueChanges.subscribe((form) => {
       if (!form) {
@@ -163,6 +176,55 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
       'beforeunload',
       this.preventUnsavedChanges.bind(this),
     );
+  }
+
+  onSave() {
+    const formControls = this.form.controls;
+    const vehicle: SafTChildCore.Vehicle = {
+      name: '',                                                                                               
+      make: '',
+      model: '',
+      year: 0, //just a placeholder
+      color: '',
+      licensePlate: '',
+      owner: { 
+        id: '',
+        name: '',
+      }
+    };
+
+    vehicle.name = formControls['name'].value;
+    vehicle.make = formControls['make'].value;
+    vehicle.model = formControls['model'].value;
+    vehicle.year = formControls['year'].value;
+    vehicle.color = formControls['color'].value;
+    vehicle.licensePlate = formControls['licensePlate'].value;
+    vehicle.owner = this.user;
+
+    //Endpoint setup for updating the information, just not working yet
+    // this.safTChildProxyService.updateVehicle(vehicle).subscribe({
+    //   next: (updatedVehicle) => {
+    //     this.clearDataFromLocalstorage();
+    //     this.dialogRef.close({
+    //       action: 'save',
+    //       data: updatedVehicle,
+    //     });
+    //   },
+    //   error: (error) => {
+    //     console.error('Error updating vehicle', error);
+    //   },
+    // });
+
+    this.safTChildProxyService.insertNewVehicle(vehicle).subscribe({
+      next: (vehicle) => {
+        this.dialogRef.close({
+        });
+      },
+      error: (e) => {
+        console.log('error occured');
+        console.log(e);
+      },
+    });
   }
 
   @HostListener('window:beforeunload', ['$event'])

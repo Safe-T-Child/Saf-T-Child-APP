@@ -81,6 +81,23 @@ export class SafTChildProxyService {
     );
   }
 
+  insertNewVehicle(vehicle: SafTChildCore.Vehicle): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${this.vehicleController}`, vehicle);
+  }
+
+  updateVehicle(vehicle: SafTChildCore.Vehicle): Observable<SafTChildCore.Vehicle> {
+    return this.http.put<SafTChildCore.Vehicle>(
+      `${this.baseUrl}/${this.vehicleController}/${vehicle.id}`,
+      vehicle,
+    );
+  }
+
+  deleteVehicle(vehicle: SafTChildCore.Vehicle): Observable<SafTChildCore.Vehicle> {
+    return this.http.delete<SafTChildCore.Vehicle>(
+      `${this.baseUrl}/${this.vehicleController}/${vehicle.id}`,
+    );
+  }
+
   // Validators for new users
   checkUserName(username: string): Observable<boolean> {
     return this.http.get<boolean>(

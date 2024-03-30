@@ -28,6 +28,12 @@
         id="name"
         class="form-control"
       />
+      <span
+          *ngIf="name?.invalid && name.touched"
+          class="text-danger"
+        >
+          Please enter a vehicle name.
+      </span>
     </div>
     <div class="form-box">
       <label for="make">Make</label>
@@ -37,6 +43,12 @@
         id="make"
         class="form-control"
       />
+      <span
+          *ngIf="make?.invalid && make.touched"
+          class="text-danger"
+        >
+          Please enter the make of vehicle.
+      </span>
     </div>
     <div class="form-box">
       <label for="model">Model</label>
@@ -46,6 +58,12 @@
         id="model"
         class="form-control"
       />
+      <span
+          *ngIf="model.invalid && model.touched"
+          class="text-danger"
+        >
+          Please enter vehicle model.
+      </span>
     </div>
     <div class="form-box">
       <label for="year">Year</label>
@@ -55,6 +73,12 @@
         id="year"
         class="form-control"
       />
+      <span
+          *ngIf="year?.invalid && year.touched"
+          class="text-danger"
+        >
+          Please enter the year vehicle was made.
+      </span>
     </div>
     <div class="form-box">
       <label for="color">Color </label>
@@ -64,6 +88,12 @@
         id="color"
         class="form-control"
       />
+      <span
+          *ngIf="color?.invalid && color.touched"
+          class="text-danger"
+        >
+          Please enter vehicle color.
+      </span>
     </div>
     <div class="form-box">
       <label for="licensePlate">License Plate </label>
@@ -73,11 +103,17 @@
         id="licensePlate"
         class="form-control"
       />
+      <span
+          *ngIf="licensePlate?.invalid && licensePlate.touched"
+          class="text-danger"
+        >
+          Please enter a valid license plate.
+      </span>
     </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions class="gap-1" style="padding: 24px; padding-top: 6px">
-  <button class="btn btn-primary" type="submit" (click)="onClose()">
+  <button class="btn btn-primary" type="submit" (click)="onSave()" [disabled]="form.status === 'INVALID'">
     Save
   </button>
   <button class="btn btn-secondary" type="button" (click)="onClose()">
