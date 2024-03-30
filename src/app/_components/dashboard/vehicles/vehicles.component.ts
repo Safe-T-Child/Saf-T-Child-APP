@@ -40,17 +40,25 @@ export class VehiclesComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      console.log(result);
+      if (result.action === 'save') {
+        this.reload();
+      }
     });
   }
 
-  deleteVehicle(vehicle: SafTChildCore.Vehicle): void{
+  reload(): void {
+    this.safTChildProxyService
+      .getVehiclesByOwnerId(this.user.id)
+      .subscribe((vehicles) => {
+        this.vehicles = vehicles;
+      });
+  }
+
+  deleteVehicle(vehicle: SafTChildCore.Vehicle): void {
     this.safTChildProxyService.deleteVehicle(vehicle).subscribe({
       next: (vehicle) => {
-        console.log('Vehicle deleted');
+        this.reload();
       },
-      
       error: (e) => {
         console.log('Error occured deleting vehicle');
         console.log(e);

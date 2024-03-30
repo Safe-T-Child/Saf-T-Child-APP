@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core';
-import { windowBreakpoint } from '../../environment';
+import { windowBreakpoint } from './environment';
 import { UserAuthenticationService } from './_services/user-authentication.service';
 import { Router } from '@angular/router';
 

@@ -91,10 +91,7 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
       if (_.every(form, _.isEmpty)) {
         return;
       }
-      // Avoid saving empty form state
-      // this.saveFormState();
     });
-    // this.restoreFormState();
 
     this.filteredOptions = this.carSuggestion.valueChanges.pipe(
       startWith(''),
@@ -146,24 +143,6 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  saveFormState(): void {
-    localStorage.setItem('formState', JSON.stringify(this.form.value));
-  }
-
-  restoreFormState(): void {
-    const savedFormState = JSON.parse(
-      localStorage.getItem('formState') || '{}',
-    );
-    if (!_.isEmpty(savedFormState)) {
-      this.form.patchValue(savedFormState);
-      this.form.markAsDirty();
-    }
-  }
-
-  clearDataFromLocalstorage(): void {
-    localStorage.removeItem('formState');
-  }
-
   ngOnInit(): void {
     window.addEventListener(
       'beforeunload',
@@ -181,16 +160,16 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
   onSave() {
     const formControls = this.form.controls;
     const vehicle: SafTChildCore.Vehicle = {
-      name: '',                                                                                               
+      name: '',
       make: '',
       model: '',
       year: 0, //just a placeholder
       color: '',
       licensePlate: '',
-      owner: { 
+      owner: {
         id: '',
         name: '',
-      }
+      },
     };
 
     vehicle.name = formControls['name'].value;
@@ -201,23 +180,11 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
     vehicle.licensePlate = formControls['licensePlate'].value;
     vehicle.owner = this.user;
 
-    //Endpoint setup for updating the information, just not working yet
-    // this.safTChildProxyService.updateVehicle(vehicle).subscribe({
-    //   next: (updatedVehicle) => {
-    //     this.clearDataFromLocalstorage();
-    //     this.dialogRef.close({
-    //       action: 'save',
-    //       data: updatedVehicle,
-    //     });
-    //   },
-    //   error: (error) => {
-    //     console.error('Error updating vehicle', error);
-    //   },
-    // });
-
     this.safTChildProxyService.insertNewVehicle(vehicle).subscribe({
       next: (vehicle) => {
         this.dialogRef.close({
+          action: 'save',
+          data: vehicle,
         });
       },
       error: (e) => {
@@ -251,10 +218,9 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
 
   onClose(): void {
     if (this.modalGuardService.canDeactivate(this.form)) {
-      this.clearDataFromLocalstorage();
       this.dialogRef.close({
         action: 'close',
-        data: null, // Or any other data you wish to return
+        data: null,
       });
     }
   }

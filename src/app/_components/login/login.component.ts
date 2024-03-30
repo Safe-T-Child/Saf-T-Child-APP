@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
-import { windowBreakpoint } from '../../../../environment';
+import { windowBreakpoint } from '../../environment';
 import { SafTChildProxyService } from '../../_services/saf-t-child.service.proxy';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -16,16 +16,13 @@ export class LoginComponent implements OnInit {
   showInvalidLogin = false;
   isLoading = false;
 
-  username: FormControl<any | null> = new FormControl(
-    null,
-    Validators.required,
-  );
+  email: FormControl<any | null> = new FormControl(null, Validators.required);
   password: FormControl<any | null> = new FormControl(
     null,
     Validators.required,
   );
   formGroup: FormGroup = new FormGroup({
-    username: this.username,
+    email: this.email,
     password: this.password,
   });
 
@@ -53,7 +50,7 @@ export class LoginComponent implements OnInit {
     console.log(this.formGroup);
     this.isLoading = true;
     this.userAuthenticationService
-      .login(this.username.value, this.password.value)
+      .login(this.email.value, this.password.value)
       .subscribe((response) => {
         this.isLoading = false;
         if (response) {

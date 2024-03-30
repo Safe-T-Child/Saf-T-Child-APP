@@ -20,8 +20,8 @@ export class UserAuthenticationService {
 
   constructor(private SafTChildProxyService: SafTChildProxyService) {}
 
-  login(username: string, password: string): Observable<boolean> {
-    return this.SafTChildProxyService.login(username, password).pipe(
+  login(email: string, password: string): Observable<boolean> {
+    return this.SafTChildProxyService.login(email, password).pipe(
       map((response) => {
         const token = response.token;
         const decodedToken: Token = jwtDecode(token);

@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { windowBreakpoint } from '../../../../environment';
+import { windowBreakpoint } from '../../environment';
 import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-dashboard',

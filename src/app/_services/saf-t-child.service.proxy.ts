@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, from, of, throwError } from 'rxjs';
-import { environment } from '../../../environment';
+import { environment } from '../environment';
 import * as SafTChildCore from '../_models/Saf-T-Child';
 
 @Injectable({
@@ -19,9 +19,9 @@ export class SafTChildProxyService {
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): Observable<any> {
+  login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/authentication`, {
-      username,
+      email,
       password,
     });
   }
@@ -85,14 +85,18 @@ export class SafTChildProxyService {
     return this.http.post(`${this.baseUrl}/${this.vehicleController}`, vehicle);
   }
 
-  updateVehicle(vehicle: SafTChildCore.Vehicle): Observable<SafTChildCore.Vehicle> {
+  updateVehicle(
+    vehicle: SafTChildCore.Vehicle,
+  ): Observable<SafTChildCore.Vehicle> {
     return this.http.put<SafTChildCore.Vehicle>(
       `${this.baseUrl}/${this.vehicleController}/${vehicle.id}`,
       vehicle,
     );
   }
 
-  deleteVehicle(vehicle: SafTChildCore.Vehicle): Observable<SafTChildCore.Vehicle> {
+  deleteVehicle(
+    vehicle: SafTChildCore.Vehicle,
+  ): Observable<SafTChildCore.Vehicle> {
     return this.http.delete<SafTChildCore.Vehicle>(
       `${this.baseUrl}/${this.vehicleController}/${vehicle.id}`,
     );
