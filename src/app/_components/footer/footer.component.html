@@ -9,26 +9,25 @@
           <use xlink:href="#bootstrap"></use>
         </svg>
       </a>
-      <p class="text-muted">© 2021</p>
+      <p class="text-muted">© 2024</p>
     </div>
     <div class="col"></div>
     <div class="col">
-      <h5>Section</h5>
+      <h5>Menu</h5>
       <ul class="nav flex-column">
-        <li class="nav-item mb-2">
-          <a href="#" class="nav-link p-0 text-muted">Home</a>
+        <li *ngIf="userAuthenticated" class="nav-item mb-2">
+          <a href="/dashboard" class="nav-link p-0 text-muted">Dashboard</a>
         </li>
         <li class="nav-item mb-2">
           <a href="/login" class="nav-link p-0 text-muted">Login</a>
         </li>
         <li class="nav-item mb-2">
-          <a href="#" class="nav-link p-0 text-muted">Pricing</a>
-        </li>
-        <li class="nav-item mb-2">
-          <a href="#" class="nav-link p-0 text-muted">FAQs</a>
-        </li>
-        <li class="nav-item mb-2">
           <a href="/about" class="nav-link p-0 text-muted">About</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/create-account" class="nav-link p-0 text-muted"
+            >Create Account</a
+          >
         </li>
       </ul>
     </div>

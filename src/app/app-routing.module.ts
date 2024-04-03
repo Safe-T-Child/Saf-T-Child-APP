@@ -8,14 +8,16 @@ import { VehiclesComponent } from './_components/dashboard/vehicles/vehicles.com
 import { GroupsComponent } from './_components/dashboard/groups/groups.component';
 import { CreateAccountComponent } from './_components/create-account/create-account.component';
 import { AboutComponent } from './_components/about/about.component';
-import { AuthGuard } from './auth/auth.guard';
+import { AuthGuardService } from './_guards/authorization-guard';
+import { ResetPasswordComponent } from './_components/reset-password/reset-password.component';
+import { AcceptGroupInviteComponent } from './_components/accept-group-invite/accept-group-invite.component';
+import { VerifyEmailComponent } from './_components/verify-email/verify-email.component';
 
 const routes: Routes = [
   { path: 'bootstrap-samples', component: BootstrapSamplesComponent },
   { path: 'login', component: LoginComponent },
   {
     path: 'create-account',
-    //canActivate: [AuthGuard],
     component: CreateAccountComponent,
   },
   { path: 'about', component: AboutComponent },
@@ -23,7 +25,7 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     children: [
       { path: 'devices', component: DevicesComponent },
       { path: 'vehicles', component: VehiclesComponent },
@@ -31,6 +33,9 @@ const routes: Routes = [
       { path: '', redirectTo: 'devices', pathMatch: 'full' }, // Redirect to /dashboard/devices by default
     ],
   },
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'verify-email', component: VerifyEmailComponent },
+  { path: 'accept-group-invite', component: AcceptGroupInviteComponent },
 ];
 
 @NgModule({

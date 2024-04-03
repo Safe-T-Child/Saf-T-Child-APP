@@ -26,7 +26,10 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DevicesModalComponent } from './_components/modals/devices-modal/devices-modal.component';
 import { GroupsModalComponent } from './_components/modals/groups-modal/groups-modal.component';
-import { AuthInterceptor } from './_guards/auth-interceptor';
+import { AuthInterceptor } from './_interceptor/auth-interceptor';
+import { ResetPasswordComponent } from './_components/reset-password/reset-password.component';
+import { VerifyEmailComponent } from './_components/verify-email/verify-email.component';
+import { AcceptGroupInviteComponent } from './_components/accept-group-invite/accept-group-invite.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +48,9 @@ import { AuthInterceptor } from './_guards/auth-interceptor';
     VehiclesModalComponent,
     DevicesModalComponent,
     GroupsModalComponent,
+    ResetPasswordComponent,
+    VerifyEmailComponent,
+    AcceptGroupInviteComponent,
   ],
   imports: [
     BrowserModule,
