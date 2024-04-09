@@ -19,6 +19,9 @@
         formControlName="firstName"
         class="form-control"
       />
+      <span *ngIf="firstName?.invalid && firstName.touched" class="text-danger">
+        Please enter a valid first name.
+      </span>
     </div>
     <div class="form-box">
       <label for="lastName">Last Name</label>
@@ -28,6 +31,9 @@
         formControlName="lastName"
         class="form-control"
       />
+      <span *ngIf="lastName?.invalid && lastName.touched" class="text-danger">
+        Please enter a valid last name.
+      </span>
     </div>
     <div class="form-box">
       <label for="email">Email</label>
@@ -37,6 +43,9 @@
         formControlName="email"
         class="form-control"
       />
+      <span *ngIf="!email.errors?.['email'] && email.touched" class="text-danger">
+        Please enter a valid email.
+      </span>
     </div>
     <div class="form-box">
       <label for="phoneNumber">Phone Number</label>
@@ -46,12 +55,30 @@
         formControlName="phoneNumber"
         class="form-control"
       />
+      <span *ngIf="phoneNumber.errors?.['invalidPhoneNumber'] && phoneNumber.touched" class="text-danger">
+        Please enter a valid phone number.
+      </span>
     </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions id="buttons-footer" class="gap-1">
-  <button class="btn btn-primary" type="submit" (click)="onSave()">Save</button>
+  <button
+    class="btn btn-primary"
+    type="submit"
+    (click)="onSave()"
+    [disabled]="form.status === 'INVALID'"
+  >
+    Save
+  </button>
   <button class="btn btn-secondary" type="button" (click)="onClose()">
     Close
+  </button>
+  <button
+    *ngIf="form.dirty"
+    class="btn btn-outline-secondary"
+    type="button"
+    (click)="onClose()"
+  >
+    Clear
   </button>
 </mat-dialog-actions>
