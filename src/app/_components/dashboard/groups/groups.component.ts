@@ -4,6 +4,7 @@ import { GroupsModalComponent } from '../../modals/groups-modal/groups-modal.com
 import { SafTChildProxyService } from '../../../_services/saf-t-child.service.proxy';
 import { UserAuthenticationService } from '../../../_services/user-authentication.service';
 import { NamedDocumentKey } from '../../../_models/base';
+import * as SafTChildCore from '../../../_models/Saf-T-Child';
 @Component({
   selector: 'app-groups',
   templateUrl: './groups.component.html',
@@ -12,8 +13,10 @@ import { NamedDocumentKey } from '../../../_models/base';
 export class GroupsComponent {
   user: NamedDocumentKey = {
     id: this.userAuthenticationService.getUserId() || '',
-    name: this.userAuthenticationService.getFirstName() || '',
+    name: localStorage.getItem('name') || '',
   };
+  users: SafTChildCore.User[] = [];
+  groups: SafTChildCore.Group[] = [];
   constructor(
     public matDialog: MatDialog,
     private safTChildProxyService: SafTChildProxyService,
@@ -23,6 +26,14 @@ export class GroupsComponent {
       .getGroupsByOwnerId(this.user.id)
       .subscribe((groups) => {
         console.log(groups);
+      });
+  }
+
+  reload(): void {
+    this.safTChildProxyService
+      .getGroupsByOwnerId(this.user.id)
+      .subscribe((groups) => {
+        this.groups = groups;
       });
   }
 
@@ -36,5 +47,10 @@ export class GroupsComponent {
       console.log('The dialog was closed');
       console.log(result);
     });
+  }
+
+  deleteMember(): void {
+    //remove user from the group, but do not want to actually delete user
+    this.reload();
   }
 }

@@ -47,6 +47,10 @@ export class SafTChildProxyService {
     return this.http.post(`${this.baseUrl}/${this.userController}`, user);
   }
 
+  insertTempUser(user: SafTChildCore.User): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${this.userController}`, user);
+  }
+
   // Devices endpoints
   updateDevice(device: SafTChildCore.Device): Observable<SafTChildCore.Device> {
     return this.http.put<SafTChildCore.Device>(

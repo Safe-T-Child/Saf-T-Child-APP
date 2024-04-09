@@ -57,7 +57,7 @@ export class GroupsModalComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private modalGuardService: ModalGuardService,
-    private saftTChildProxyService: SafTChildProxyService,
+    private safTChildProxyService: SafTChildProxyService,
     private userAuthenticationService: UserAuthenticationService,
     private router: Router,
     private matDialog: MatDialog,
@@ -85,10 +85,43 @@ export class GroupsModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSave(): void {
-    if (this.form.valid) {
-      console.log(this.form.value);
-    }
+  onSave() {
+    const formControls = this.form.controls;
+
+    const user: SafTChildCore.User = {
+      username: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      primaryPhoneNumber: {
+        countryCode: 1, // Hard code for now
+        phoneNumberValue: 0,
+      },
+      isEmailVerified: false,
+      secondaryPhoneNumbers: [],
+    };
+
+    user.email = formControls['email'].value;
+    user.lastName = formControls['lastName'].value;
+    user.firstName = formControls['firstName'].value;
+
+    let phoneNumber = formControls['phoneNumber'].value;
+    phoneNumber = _.toNumber(phoneNumber);
+    user.primaryPhoneNumber.phoneNumberValue = phoneNumber;
+
+    this.safTChildProxyService.insertTempUser(user).subscribe({
+      next: (group) => {
+        this.dialogRef.close({
+          action: 'save',
+          data: group,
+        });
+      },
+      error: (e) => {
+        console.log('error occured');
+        console.log(e);
+      },
+    });
   }
 
   onClose(): void {
