@@ -1,5 +1,5 @@
 export const environment = (() => {
-  const production = false;
+  const production = true;
   return {
     production,
     safTChildApiUrl: production
