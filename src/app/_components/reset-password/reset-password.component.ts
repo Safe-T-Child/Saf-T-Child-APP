@@ -49,4 +49,9 @@ export class ResetPasswordComponent {
   onResize(event: Event) {
     this.isMobile = window.innerWidth < windowBreakpoint;
   }
+
+  resetPassword() {
+    // Call API to reset password
+    console.log('Reset password');
+  }
 }
