@@ -6,7 +6,7 @@ for transition and overlay effect
   <div class="menu-container">
     <button class="close-btn" (click)="toggleOverlay()">&times;</button>
     <ul class="menu-list d-flex row gap-1">
-      <li>
+      <li *ngIf="userAuthenticated">
         <a class="menu-item" href="/dashboard" (click)="toggleOverlay()"
           >Dashboard</a
         >
@@ -17,10 +17,12 @@ for transition and overlay effect
       <li *ngIf="userAuthenticated" style="cursor: pointer">
         <a class="menu-item" (click)="toggleOverlay(true)">Logout</a>
       </li>
-      <li><a class="menu-item" href="/" (click)="toggleOverlay()">About</a></li>
       <li>
-        <a class="menu-item" href="/bootstrap-samples" (click)="toggleOverlay()"
-          >Samples</a
+        <a class="menu-item" href="/about" (click)="toggleOverlay()">About</a>
+      </li>
+      <li>
+        <a class="menu-item" href="/create-account" (click)="toggleOverlay()"
+          >Create Account</a
         >
       </li>
     </ul>

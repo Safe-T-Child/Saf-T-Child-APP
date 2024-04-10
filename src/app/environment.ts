@@ -1,10 +1,10 @@
 export const environment = (() => {
-  const production = false;
+  const production = true;
   return {
     production,
     safTChildApiUrl: production
-      ? 'https://api.safTChild.com'
-      : 'https://localhost:7164',
+      ? 'https://saf-t-child-services.azurewebsites.net'
+      : 'https://localhost:5000',
   };
 })();
 

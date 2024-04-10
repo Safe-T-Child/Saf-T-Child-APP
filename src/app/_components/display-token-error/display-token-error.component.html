@@ -1,0 +1,21 @@
+<div class="main-component">
+  <div class="inner-component">
+    <div class="alert alert-danger" role="alert" *ngIf="alertMessage !== ''">
+      {{ alertMessage }}
+    </div>
+    <div>
+      <h2 class="text-center">
+        Error {{ errorAction }}. Please return to email for instructions.
+      </h2>
+    </div>
+    <div>
+      <a
+        type="submit"
+        class="btn btn-primary btn-main-aqua"
+        href="/{{ routeTo }}"
+      >
+        {{ buttonLabel }}
+      </a>
+    </div>
+  </div>
+</div>
