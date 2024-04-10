@@ -1,16 +1,6 @@
 <h2 mat-dialog-title>Add New Family Member</h2>
 <mat-dialog-content>
   <form [formGroup]="form">
-    <div
-      id="success-device"
-      class="d-flex align-items-center"
-      *ngIf="device.value"
-    >
-      <span class="material-icons" style="color: green"
-        >check_circle_outline</span
-      >
-      <p style="margin-bottom: 0px">Device found</p>
-    </div>
     <div class="form-box">
       <label for="firstName">First Name</label>
       <input
@@ -43,7 +33,10 @@
         formControlName="email"
         class="form-control"
       />
-      <span *ngIf="!email.errors?.['email'] && email.touched" class="text-danger">
+      <span
+        *ngIf="!email.errors?.['email'] && email.touched"
+        class="text-danger"
+      >
         Please enter a valid email.
       </span>
     </div>
@@ -55,9 +48,22 @@
         formControlName="phoneNumber"
         class="form-control"
       />
-      <span *ngIf="phoneNumber.errors?.['invalidPhoneNumber'] && phoneNumber.touched" class="text-danger">
+      <span
+        *ngIf="
+          phoneNumber.errors?.['invalidPhoneNumber'] && phoneNumber.touched
+        "
+        class="text-danger"
+      >
         Please enter a valid phone number.
       </span>
+    </div>
+    <div class="form-box">
+      <label for="role">Role</label>
+      <select id="role" formControlName="role" class="form-select">
+        <option *ngFor="let role of roles" [ngValue]="role">
+          {{ role.name }}
+        </option>
+      </select>
     </div>
   </form>
 </mat-dialog-content>
