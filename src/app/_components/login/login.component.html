@@ -4,23 +4,22 @@
   style="height: 65vh"
 >
   <div
-    class="d-flex bg-white p-4 m-2 rounded-3 shadow flex-column justify-content-center gap-3 custom-max-width-vw"
+    class="d-flex bg-white p-4 m-2 rounded-3 shadow flex-column justify-content-center gap-2 custom-max-width-vw"
     [ngClass]="!isMobile ? 'desktop-custom-width' : ''"
   >
-    <div
-      class="d-flex flex-column justify-content-center gap-1 align-items-center"
-    >
-      <h2>Login</h2>
-      <div class="d-inline">
-        <p class="d-inline">New to Saf-T Child?</p>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <h2 class="m-2">Login</h2>
+      <div class="d-flex flex-column">
+        <p class="m-0">New to Saf-T Child?</p>
         <a
           href="/create-account"
-          class="create-account-link"
+          class="create-account-link align-self-center"
           style="text-decoration: underline"
           >Create Account</a
         >
       </div>
     </div>
+
     <form [formGroup]="formGroup" class="d-flex flex-column gap-2">
       <input
         class="form-control"
@@ -55,8 +54,11 @@
         </button>
       </ng-template>
       <div *ngIf="showInvalidLogin" class="alert alert-danger" role="alert">
-        Your email/password is incorrect. Please reset your password or contact
-        our help center
+        Your email/password is incorrect. Please
+        <a href="/reset-password" class="reset-password-link"
+          >reset your password</a
+        >
+        or contact our help center.
       </div>
     </form>
   </div>

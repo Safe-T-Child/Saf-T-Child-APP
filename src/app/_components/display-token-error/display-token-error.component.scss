@@ -1,0 +1,11 @@
+.main-component {
+  display: flex;
+  padding: 1.5rem;
+  flex-direction: column;
+  align-items: center;
+  height: 65vh;
+}
+
+.inner-component {
+  max-width: 65vw;
+}

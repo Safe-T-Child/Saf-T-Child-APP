@@ -129,4 +129,18 @@ export class SafTChildProxyService {
       `${this.baseUrl}/${this.validationController}/checkEmail?email=${email}`,
     );
   }
+
+  //Reset password
+  sendResetPasswordEmail(email: string): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/${this.userController}/forgotUserPassword?email=${email}`,
+      { email },
+    );
+  }
+
+  verifyEmail(token: string): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/${this.validationController}/verifyEmailAddress?token=${token}`,
+    );
+  }
 }

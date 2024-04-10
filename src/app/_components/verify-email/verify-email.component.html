@@ -1,0 +1,23 @@
+<div class="content d-flex p-4 flex-column" *ngIf="isEmailVerified">
+  <div class="d-flex flex-row justify-content-center">
+    <span class="material-icons email-verified-icon">verified_user</span>
+    <h1>Email is verified</h1>
+  </div>
+  <div class="d-flex flex-column">
+    <h3 class="text-center">You can now login to your account</h3>
+    <div class="d-flex justify-content-center">
+      <button class="btn btn-primary btn-main-aqua" [routerLink]="['/login']">
+        Login
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-display-token-error
+  *ngIf="!isEmailVerified"
+  [alertMessage]="alertMessage"
+  [errorAction]="'verifying email'"
+  [routeTo]="'about'"
+  [buttonLabel]="'Instructions to resend email verification'"
+>
+</app-display-token-error>

@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 export class AppComponent {
   title = 'saf-t-child';
   s = 'Capstone Project Team 7';
-  // userAuthenticated = false;
 
   get userAuthenticated() {
     return this.userAuthenticationService.checkInitialAuthState;

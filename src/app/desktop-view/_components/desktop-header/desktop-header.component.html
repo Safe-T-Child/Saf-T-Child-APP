@@ -13,15 +13,19 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-end">
-        <!-- Optional: dropdown-menu-end aligns the dropdown menu to the right -->
-        <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+        <li *ngIf="userAuthenticated">
+          <a class="dropdown-item" href="/dashboard">Dashboard</a>
+        </li>
         <li *ngIf="!userAuthenticated">
           <a class="dropdown-item" href="/login">Login</a>
         </li>
         <li *ngIf="userAuthenticated">
           <a class="dropdown-item" (click)="onLogout()">Logout</a>
         </li>
-        <li><a class="dropdown-item" href="/about">About</a></li>
+        <li><a class="dropdown-item" href="/about">About us</a></li>
+        <li>
+          <a class="dropdown-item" href="/create-account">Create Account</a>
+        </li>
       </ul>
     </li>
   </ul>
