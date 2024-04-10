@@ -19,6 +19,7 @@ export class VehiclesComponent {
   };
   vehicles: SafTChildCore.Vehicle[] = [];
   vehicle: SafTChildCore.Vehicle[] = [];
+  isLoading: boolean = false;
 
   constructor(
     public matDialog: MatDialog,
@@ -26,17 +27,32 @@ export class VehiclesComponent {
     private userAuthenticationService: UserAuthenticationService,
     private router: Router,
   ) {
+    this.isLoading = true;
     this.safTChildProxyService
       .getVehiclesByOwnerId(this.user.id)
       .subscribe((vehicles) => {
         this.vehicles = vehicles;
+        this.isLoading = false;
       });
   }
 
   openDialog(): void {
     const dialogRef = this.matDialog.open(VehiclesModalComponent, {
       width: '300px',
-      data: { inputData: 'your data' },
+      data: { inputData: null, title: 'Add' },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result.action === 'save') {
+        this.reload();
+      }
+    });
+  }
+
+  editVehicle(vehicle: SafTChildCore.Vehicle): void {
+    const dialogRef = this.matDialog.open(VehiclesModalComponent, {
+      width: '300px',
+      data: { inputData: vehicle, title: 'Edit' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {

@@ -30,6 +30,7 @@ import { UserAuthenticationService } from '../../../_services/user-authenticatio
   providers: [CarvanaProxyService],
 })
 export class VehiclesModalComponent implements OnInit, OnDestroy {
+  editId: string | null = null;
   user: NamedDocumentKey = {
     id: this.userAuthenticationService.getUserId() || '',
     name: this.userAuthenticationService.getFirstName() || '',
@@ -84,6 +85,8 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
     private router: Router,
     private userAuthenticationService: UserAuthenticationService,
   ) {
+    this.populateEditForm();
+
     this.form.valueChanges.subscribe((form) => {
       if (!form) {
         return;
@@ -107,6 +110,19 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
         this.populateVehicleData(value);
       }
     });
+  }
+
+  populateEditForm(): void {
+    if (this.data && this.data.inputData) {
+      const vehicle = this.data.inputData;
+      this.name.setValue(vehicle.name);
+      this.make.setValue(vehicle.make);
+      this.model.setValue(vehicle.model);
+      this.year.setValue(vehicle.year);
+      this.color.setValue(vehicle.color);
+      this.licensePlate.setValue(vehicle.licensePlate);
+      this.editId = vehicle.id;
+    }
   }
 
   populateVehicleData(suggestion: Carvana.Suggestion): void {
@@ -143,19 +159,9 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit(): void {
-    window.addEventListener(
-      'beforeunload',
-      this.preventUnsavedChanges.bind(this),
-    );
-  }
+  ngOnInit(): void {}
 
-  ngOnDestroy(): void {
-    window.removeEventListener(
-      'beforeunload',
-      this.preventUnsavedChanges.bind(this),
-    );
-  }
+  ngOnDestroy(): void {}
 
   onSave() {
     const formControls = this.form.controls;
@@ -180,18 +186,34 @@ export class VehiclesModalComponent implements OnInit, OnDestroy {
     vehicle.licensePlate = formControls['licensePlate'].value;
     vehicle.owner = this.user;
 
-    this.safTChildProxyService.insertNewVehicle(vehicle).subscribe({
-      next: (vehicle) => {
-        this.dialogRef.close({
-          action: 'save',
-          data: vehicle,
-        });
-      },
-      error: (e) => {
-        console.log('error occured');
-        console.log(e);
-      },
-    });
+    if (this.editId) {
+      vehicle.id = this.editId;
+      this.safTChildProxyService.updateVehicle(vehicle).subscribe({
+        next: (vehicle) => {
+          this.dialogRef.close({
+            action: 'save',
+            data: vehicle,
+          });
+        },
+        error: (e) => {
+          console.log('error occured');
+          console.log(e);
+        },
+      });
+    } else {
+      this.safTChildProxyService.insertNewVehicle(vehicle).subscribe({
+        next: (vehicle) => {
+          this.dialogRef.close({
+            action: 'save',
+            data: vehicle,
+          });
+        },
+        error: (e) => {
+          console.log('error occured');
+          console.log(e);
+        },
+      });
+    }
   }
 
   @HostListener('window:beforeunload', ['$event'])
