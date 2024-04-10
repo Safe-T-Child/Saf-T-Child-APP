@@ -14,13 +14,14 @@ export class AuthGuardService implements CanActivate {
     public router: Router,
   ) {}
   canActivate(): Observable<boolean> {
-    console.log('AuthGuardService');
     return this.userAuthenticationService.loggedIn.pipe(
       map((isLoggedIn: boolean) => {
         if (isLoggedIn) {
+          if (this.router.url === '') {
+            this.router.navigate(['/dashboard/devices']);
+          }
           return true;
         } else {
-          // Redirect to login page or handle unauthorized access
           this.router.navigate(['/login']);
           return false;
         }
