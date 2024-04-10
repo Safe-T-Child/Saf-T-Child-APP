@@ -1,0 +1,43 @@
+<div
+  class="content d-flex justify-content-center align-items-center flex-column"
+>
+  <div class="container p-4">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="mb-4 p-1" style="margin-left: 1rem">
+          Frequently Asked Questions
+        </h2>
+        <div class="accordion" id="faqAccordion">
+          <div class="accordion-item" *ngFor="let faq of faqs; let i = index">
+            <h2 class="accordion-header" [id]="'heading' + i">
+              <button
+                class="accordion-button"
+                [class.collapsed]="expandedFaqKey !== faq.key"
+                type="button"
+                data-bs-toggle="collapse"
+                [attr.data-bs-target]="'#collapse' + i"
+                [attr.aria-expanded]="expandedFaqKey === faq.key"
+                [attr.aria-controls]="'collapse' + i"
+              >
+                <div class="d-flex w-100 justify-content-between">
+                  <span>{{ faq.question }}</span>
+                </div>
+              </button>
+            </h2>
+            <div
+              [id]="'collapse' + i"
+              [class.show]="expandedFaqKey === faq.key"
+              class="accordion-collapse collapse"
+              [attr.aria-labelledby]="'heading' + i"
+              data-bs-parent="#faqAccordion"
+            >
+              <div class="accordion-body" [innerHTML]="faq.answer">
+                <!-- The answer is rendered here with HTML content -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

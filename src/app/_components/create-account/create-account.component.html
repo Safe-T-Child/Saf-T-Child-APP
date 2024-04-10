@@ -21,8 +21,8 @@
       </div>
     </div>
 
-    <form [formGroup]="formGroup" class="d-flex flex-column gap-2">
-      <p>**All fields are required.</p>
+    <form [formGroup]="formGroup" class="d-flex flex-column gap-3">
+      <p class="m-0">**All fields are required.</p>
       <div class="form-box">
         <label for="firstName" class="form-label">First Name</label>
         <input
@@ -119,34 +119,6 @@
       </div>
 
       <div class="form-box">
-        <label for="username" class="form-label">Username</label>
-        <input
-          class="form-control"
-          type="text"
-          id="username"
-          placeholder="Username"
-          formControlName="username"
-        />
-        <span
-          *ngIf="
-            formGroup.get('username')?.invalid &&
-            formGroup.get('username')?.touched &&
-            !formGroup.get('username')?.errors?.['usernameTaken']
-          "
-          class="text-danger"
-        >
-          Enter valid username.
-        </span>
-        <!-- Specific error message for usernameTaken error -->
-        <span
-          *ngIf="formGroup.get('username')?.errors?.['usernameTaken']"
-          class="text-danger"
-        >
-          This username is already taken. Please choose a different one.
-        </span>
-      </div>
-
-      <div class="form-box">
         <label for="password" class="form-label">Password</label>
         <input
           type="password"
@@ -195,10 +167,6 @@
           Loading...
         </button>
       </ng-template>
-      <div *ngIf="showInvalidLogin" class="alert alert-danger" role="alert">
-        Your username/password is incorrect. Please reset your password or
-        contact our help center
-      </div>
     </form>
   </div>
 </div>

@@ -32,13 +32,6 @@ export class CreateAccountComponent implements OnInit {
   // having to refer to their formGroup. This technique is valid to be used
   // when there are no other formgroup.
 
-  //TODO: add validation to make sure that username is not already taken
-  // Add
-  username: FormControl<string | null> = new FormControl(null, [
-    Validators.required,
-    Validators.pattern(/^\w+$/), // Only letters and numbers
-  ]);
-
   firstName: FormControl<string | null> = new FormControl(
     null,
     Validators.required,
@@ -74,7 +67,6 @@ export class CreateAccountComponent implements OnInit {
   // The form group will be valid ONLY when ALL the controls, that are required, have a VALID status
 
   formGroup: FormGroup = new FormGroup({
-    username: this.username,
     password: this.password,
     firstName: this.firstName,
     lastName: this.lastName,
@@ -96,7 +88,6 @@ export class CreateAccountComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
   ) {
-    this.username.setAsyncValidators(this.usernameUniqueValidator.bind(this));
     this.phoneNumber.setAsyncValidators(
       this.phoneNumberUniqueValidator.bind(this),
     );
@@ -109,7 +100,6 @@ export class CreateAccountComponent implements OnInit {
     const formControls = this.formGroup.controls;
 
     const user: SafTChildCore.User = {
-      username: '',
       firstName: '',
       lastName: '',
       email: '',
@@ -123,7 +113,6 @@ export class CreateAccountComponent implements OnInit {
     };
 
     user.email = formControls['email'].value;
-    user.username = formControls['username'].value;
     user.lastName = formControls['lastName'].value;
     user.firstName = formControls['firstName'].value;
 

@@ -1,0 +1,26 @@
+<div class="content d-flex justify-content-center align-items-center p-5">
+  <div
+    class="d-flex bg-white p-4 m-2 rounded-3 shadow flex-column justify-content-center gap-3"
+    [ngClass]="!isMobile ? 'desktop-custom-width' : 'custom-max-width-vw'"
+  >
+    <p>Hello Jonathan Hernandez</p>
+    <p>You have been invited to join the group "Group 1" by "User 1".</p>
+
+    <div
+      class="content d-flex flex-column justify-content-center align-items-center p-3"
+    >
+      <h3>Do you accept the invitation?</h3>
+
+      <div class="d-flex flex-row gap-1">
+        <button class="btn btn-primary btn-main-aqua">Accept</button>
+        <button class="btn btn-secondary">Decline</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-display-token-error
+  *ngIf="token === ''"
+  [alertMessage]="alertMessage"
+  [errorAction]="'resetting password'"
+  [routeTo]="'about'"
+></app-display-token-error>
