@@ -1,15 +1,37 @@
-<button matTooltip="Add Item" class="btn">
-  <span class="material-icons" (click)="openDialog()">add</span>
+<app-loading-overlay [isLoading]="isLoading"></app-loading-overlay>
+
+<button matTooltip="Add Item" class="btn" (click)="openDialog()">
+  <span class="material-icons">add</span>
 </button>
 <div class="list-group gap-3">
   <div class="card device-pill" *ngFor="let device of devices">
     <div class="card-body">
       <div class="d-flex w-100 justify-content-between align-items-center">
-        <h2 class="mb-1">{{ device.name }}</h2>
-        <div class="d-flex align-items-center gap-3">
+        <div class="d-flex flex-column">
+          <h2 class="mb-1">{{ device.name }}</h2>
+          <label class="mb-0">Current Vehicle</label>
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            (change)="changeVehicle($event.target, device)"
+          >
+            <option *ngIf="device.car" [value]="device.car.id" selected>
+              {{ device.car.name }}
+            </option>
+            <ng-container *ngFor="let vehicle of vehicles">
+              <option
+                *ngIf="device.car?.id !== vehicle.id"
+                [value]="vehicle.id"
+              >
+                {{ vehicle.name }}
+              </option>
+            </ng-container>
+          </select>
+        </div>
+        <div class="d-flex align-items-center gap-2">
           <small
             class="badge"
-            [ngClass]="device.status === 'Active' ? 'bg-success' : 'bg-danger'"
+            [ngClass]="device.status ? 'bg-success' : 'bg-danger'"
           >
             {{ device.status }}
           </small>

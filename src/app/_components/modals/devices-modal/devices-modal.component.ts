@@ -68,6 +68,8 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
     private router: Router,
     private matDialog: MatDialog,
   ) {
+    this.populateActivationCode();
+
     forkJoin([
       this.saftTChildProxyService.getGroupsByOwnerId(this.user.id),
       this.saftTChildProxyService.getVehiclesByOwnerId(this.user.id),
@@ -95,6 +97,23 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
         this.device.setValue(null);
       }
     });
+  }
+
+  populateActivationCode(): void {
+    if (this.data && this.data.activationCode) {
+      const activationCode = this.data.activationCode;
+
+      if (activationCode && activationCode.length === 9) {
+        this.activationCode.setValue(this.data.activationCode);
+        this.saftTChildProxyService
+          .getDeviceByActivationCode(activationCode)
+          .subscribe((device) => {
+            this.device.setValue(device);
+          });
+      } else {
+        this.device.setValue(null);
+      }
+    }
   }
 
   saveFormState(): void {
