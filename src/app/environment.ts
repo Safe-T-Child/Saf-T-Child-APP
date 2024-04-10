@@ -3,7 +3,7 @@ export const environment = (() => {
   return {
     production,
     safTChildApiUrl: production
-      ? 'saf-t-child-services.azurewebsites.net'
+      ? 'https://saf-t-child-services.azurewebsites.net'
       : 'https://localhost:5000',
   };
 })();
