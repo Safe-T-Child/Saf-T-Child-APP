@@ -26,21 +26,10 @@ export class SafTChildProxyService {
     });
   }
 
-  getDevices(): Observable<SafTChildCore.Device> {
-    // add token to header for authentication
-    const token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjY1ZjVlZDhhZWI0Y2EzMTgzMGQ5NDlmNSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6IlRlc3RpbmdOYW1lIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3VybmFtZSI6IlRlc3RpbmdMYXN0TmFtZSIsImV4cCI6MTcxMTEyNjI5OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE2NCIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNjQifQ.JxBxsFo9C-OldZ2MGZ6hX6MmMkU9rgzDG7dDCjYcCT0';
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-    return this.http.get<SafTChildCore.Device>(`${this.baseUrl}/device`, {
-      headers,
-    });
-  }
-
-  getUsers(): Observable<SafTChildCore.User> {
-    const controller = 'user';
-    return this.http.get<SafTChildCore.User>(`${this.baseUrl}/${controller}`);
+  getRoles(): Observable<SafTChildCore.Role[]> {
+    return this.http.get<SafTChildCore.Role[]>(
+      `${this.baseUrl}/${this.userController}/getRoles`,
+    );
   }
 
   insertNewUser(user: SafTChildCore.User): Observable<any> {
