@@ -10,9 +10,6 @@ import { Router } from '@angular/router';
   providers: [UserAuthenticationService],
 })
 export class AppComponent {
-  title = 'saf-t-child';
-  s = 'Capstone Project Team 7';
-
   get userAuthenticated() {
     return this.userAuthenticationService.checkInitialAuthState;
   }

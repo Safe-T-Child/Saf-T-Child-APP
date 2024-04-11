@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { SafTChildProxyService } from './saf-t-child.service.proxy';
-import { jwtDecode } from 'jwt-decode';
+import { JwtPayload, jwtDecode } from 'jwt-decode';
 import { Token } from '../_models/token';
 
 @Injectable({
@@ -13,9 +13,15 @@ export class UserAuthenticationService {
 
   get checkInitialAuthState(): boolean {
     // Example: Check if a token exists in localStorage
+    let status = false;
     const token = localStorage.getItem('Saf-T-ChildToken');
+
+    if (token) {
+      status = this.checkTokenValidity();
+    }
+
     // Consider additional checks here for token validity, expiration, etc.
-    return !!token; // Returns true if token exists, false otherwise
+    return status; // Returns true if token exists, false otherwise
   }
 
   constructor(private SafTChildProxyService: SafTChildProxyService) {}
@@ -74,6 +80,18 @@ export class UserAuthenticationService {
     if (!token) return '';
     const decodedToken: Token = jwtDecode(token);
     return decodedToken.userId;
+  }
+
+  checkTokenValidity(): boolean {
+    const token = localStorage.getItem('Saf-T-ChildToken');
+    if (!token) return false;
+    const decodedToken: JwtPayload = jwtDecode(token);
+    const currentTime = new Date().getTime() / 1000;
+
+    if (decodedToken.exp === null || decodedToken.exp === undefined) {
+      return false;
+    }
+    return decodedToken?.exp > currentTime;
   }
 
   logout(): void {

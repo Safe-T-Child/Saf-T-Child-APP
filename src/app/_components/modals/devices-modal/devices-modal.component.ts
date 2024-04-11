@@ -22,6 +22,7 @@ import { UserAuthenticationService } from '../../../_services/user-authenticatio
   styleUrl: './devices-modal.component.scss',
 })
 export class DevicesModalComponent implements OnInit, OnDestroy {
+  deviceEditId: string | null = null;
   user: NamedDocumentKey = {
     id: this.userAuthenticationService.getUserId() || '',
     name: this.userAuthenticationService.getFirstName() || '',
@@ -45,11 +46,9 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
   form: FormGroup = new FormGroup({
     name: this.name,
     vehicle: this.vehicle,
-    group: this.group,
   });
 
   vehicles: Vehicle[] = [];
-  groups: Group[] = [];
 
   get canSave(): boolean {
     if (this.name.value !== '' && this.device.value) {
@@ -70,19 +69,12 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
   ) {
     this.populateActivationCode();
 
-    forkJoin([
-      this.saftTChildProxyService.getGroupsByOwnerId(this.user.id),
-      this.saftTChildProxyService.getVehiclesByOwnerId(this.user.id),
-    ]).subscribe(([groups, vehicles]) => {
-      this.groups = groups;
-      this.vehicles = vehicles;
+    this.populateEditData();
 
-      if (groups.length === 0) {
-        this.group.disable();
-      }
-      if (vehicles.length === 0) {
-        this.vehicle.disable();
-      }
+    this.saftTChildProxyService.getVehiclesByOwnerId(this.user.id).subscribe({
+      next: (vehicles) => {
+        this.vehicles = vehicles;
+      },
     });
 
     this.activationCode.valueChanges.subscribe((value) => {
@@ -116,8 +108,27 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  saveFormState(): void {
-    localStorage.setItem('formState', JSON.stringify(this.form.value));
+  populateEditData(): void {
+    if (this.data && this.data.inputData) {
+      const device = this.data.inputData;
+      this.device.setValue(device);
+      this.deviceEditId = device.id;
+      this.name.setValue(device.name);
+
+      if (device.car) {
+        this.saftTChildProxyService
+          .getVehiclesByOwnerId(this.user.id)
+          .subscribe({
+            next: (vehicles) => {
+              this.vehicles = vehicles;
+              const vehicle = _.find(vehicles, (v) => v.id === device.car.id);
+              if (vehicle) {
+                this.vehicle.setValue(vehicle);
+              }
+            },
+          });
+      }
+    }
   }
 
   addNew(tab: string): void {
@@ -131,40 +142,9 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  restoreFormState(): void {
-    const savedFormState = JSON.parse(
-      localStorage.getItem('formState') || '{}',
-    );
-    if (!_.isEmpty(savedFormState)) {
-      this.form.patchValue(savedFormState);
-      this.form.markAsDirty();
-    }
-  }
+  ngOnInit(): void {}
 
-  clearDataFromLocalstorage(): void {
-    localStorage.removeItem('formState');
-  }
-
-  ngOnInit(): void {
-    window.addEventListener(
-      'beforeunload',
-      this.preventUnsavedChanges.bind(this),
-    );
-  }
-
-  ngOnDestroy(): void {
-    window.removeEventListener(
-      'beforeunload',
-      this.preventUnsavedChanges.bind(this),
-    );
-  }
-
-  @HostListener('window:beforeunload', ['$event'])
-  preventUnsavedChanges(event: BeforeUnloadEvent): void {
-    if (this.form.dirty) {
-      event.returnValue = true; // Chrome requires returnValue to be set
-    }
-  }
+  ngOnDestroy(): void {}
 
   onSave(): void {
     if (this.form.valid && this.device.value) {
@@ -179,31 +159,37 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
           id: this.vehicle.value.id || '',
         };
       }
-      if (this.group.value) {
-        device.group = {
-          name: this.group.value.name,
-          id: this.group.value.id || '',
-        };
-      }
 
-      this.saftTChildProxyService.updateDevice(device).subscribe({
-        next: (updatedDevice) => {
-          this.clearDataFromLocalstorage();
-          this.dialogRef.close({
-            action: 'save',
-            data: updatedDevice,
-          });
-        },
-        error: (error) => {
-          console.error('Error updating device', error);
-        },
-      });
+      if (this.deviceEditId) {
+        this.saftTChildProxyService.updateDevice(device).subscribe({
+          next: (updatedDevice) => {
+            this.dialogRef.close({
+              action: 'save',
+              data: updatedDevice,
+            });
+          },
+          error: (error) => {
+            console.error('Error updating device', error);
+          },
+        });
+      } else {
+        this.saftTChildProxyService.updateDevice(device).subscribe({
+          next: (updatedDevice) => {
+            this.dialogRef.close({
+              action: 'save',
+              data: updatedDevice,
+            });
+          },
+          error: (error) => {
+            console.error('Error updating device', error);
+          },
+        });
+      }
     }
   }
 
   onClose(): void {
     if (this.modalGuardService.canDeactivate(this.form)) {
-      this.clearDataFromLocalstorage();
       this.dialogRef.close({
         action: 'close',
         data: null, // Or any other data you wish to return
