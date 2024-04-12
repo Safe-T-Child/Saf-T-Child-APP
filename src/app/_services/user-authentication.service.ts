@@ -24,10 +24,10 @@ export class UserAuthenticationService {
     return status; // Returns true if token exists, false otherwise
   }
 
-  constructor(private SafTChildProxyService: SafTChildProxyService) {}
+  constructor(private safTChildProxyService: SafTChildProxyService) {}
 
   login(email: string, password: string): Observable<boolean> {
-    return this.SafTChildProxyService.login(email, password).pipe(
+    return this.safTChildProxyService.login(email, password).pipe(
       map((response) => {
         const token = response.token;
         const decodedToken: Token = jwtDecode(token);
@@ -35,6 +35,16 @@ export class UserAuthenticationService {
         const isAuthenticated = Boolean(response); // or any other logic based on your response structure
         if (isAuthenticated) {
           localStorage.setItem('Saf-T-ChildToken', response.token);
+
+          const userId = decodedToken.userId;
+
+          this.safTChildProxyService.getUser(userId).subscribe((user) => {
+            if (!user.isEmailVerified) {
+              this.safTChildProxyService
+                .sendEmailVerificationCode(user.email)
+                .subscribe();
+            }
+          });
           this.loggedIn.next(true);
         }
         return isAuthenticated;

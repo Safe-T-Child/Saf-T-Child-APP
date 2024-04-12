@@ -1,4 +1,14 @@
 <div
+  class="alert alert-success alert-fixed"
+  role="alert"
+  *ngIf="!showSuccessMessage"
+>
+  User added successfully. Redirecting to Login.
+</div>
+
+<app-loading-overlay [isLoading]="isLoading"></app-loading-overlay>
+
+<div
   class="content d-flex justify-content-center align-items-center p-5"
   [class.active]="contentActive"
 >
@@ -91,7 +101,8 @@
           "
           class="text-danger"
         >
-          Email address associated to existing account.
+          Email address associated to existing account. Continue to
+          <a href="/login" class="login-link">Login</a>
         </span>
       </div>
 
@@ -142,7 +153,7 @@
           </button>
 
           <!-- Verification code input and verify button will appear only after the verification is sent -->
-          <div *ngIf="verificationSent">
+          <div *ngIf="verificationSent && !codeVerified">
             <input
               type="text"
               class="form-control mb-2"
@@ -153,6 +164,16 @@
             <button class="btn btn-success" (click)="verifyCode()">
               Verify Code
             </button>
+          </div>
+          <div
+            id="success-device"
+            class="d-flex align-items-center"
+            *ngIf="codeVerified"
+          >
+            <span class="material-icons" style="color: green"
+              >check_circle_outline</span
+            >
+            <p style="margin-bottom: 0px">Phone Number Verified</p>
           </div>
         </div>
       </div>
@@ -185,7 +206,7 @@
         >
           Invalid password.
         </span>
-        <ul class="list-unstyled">
+        <ul class="list-unstyled" *ngIf="formGroup.get('password')?.dirty">
           <li
             [ngClass]="{
               'text-success':
@@ -229,7 +250,7 @@
         type="button"
         class="btn btn-primary btn-main-aqua"
         (click)="createAccount()"
-        [disabled]="formGroup.status === 'INVALID'"
+        [disabled]="!validForm"
         *ngIf="!isLoading; else loadingTemplate"
       >
         Create Account
