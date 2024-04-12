@@ -17,3 +17,12 @@
   margin-bottom: 5rem;
   min-height: 60vh;
 }
+
+.alert-fixed {
+  position: fixed;
+  top: 20%; /* Adjust this value to move it up or down */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050; /* Ensures it stays on top */
+  width: 80%; /* Adjust based on your preference */
+}

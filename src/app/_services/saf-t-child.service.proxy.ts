@@ -185,7 +185,7 @@ export class SafTChildProxyService {
 
   verifyEmail(token: string): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/${this.validationController}/verifyEmailAddress?token=${token}`,
+      `${this.baseUrl}/${this.validationController}/verifyEmailAddress?tokenstring=${token}`,
     );
   }
 

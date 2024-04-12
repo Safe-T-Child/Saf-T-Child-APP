@@ -3,6 +3,7 @@ import { windowBreakpoint } from '../../environment';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { SafTChildProxyService } from '../../_services/saf-t-child.service.proxy';
 import { Router } from '@angular/router';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-generate-reset-password',
@@ -38,13 +39,19 @@ export class GenerateResetPasswordComponent {
         (response) => {
           this.emailSending = false;
           this.emailSent = true;
-          this.router.navigate(['/login']);
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 6000);
         },
         (error) => {
           if (error.status === 404) {
             this.emailSending = false;
             this.emailSent = true;
-            this.router.navigate(['/login']);
+
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 6000);
+
             return;
           }
           this.emailSending = false;
