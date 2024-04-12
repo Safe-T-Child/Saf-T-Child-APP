@@ -34,10 +34,10 @@
         class="form-control"
       />
       <span
-        *ngIf="!email.errors?.['email'] && email.touched"
-        class="text-danger"
-      >
-        Please enter a valid email.
+          *ngIf="email.errors?.['email'] && email.touched"
+          class="text-danger"
+        >
+          Please enter a valid email address.
       </span>
     </div>
     <div class="form-box">

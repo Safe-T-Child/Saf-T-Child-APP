@@ -25,7 +25,7 @@ export class GroupsComponent {
     this.safTChildProxyService
       .getGroupsByOwnerId(this.user.id)
       .subscribe((groups) => {
-        console.log(groups);
+        this.groups = groups;
       });
   }
 
@@ -37,15 +37,29 @@ export class GroupsComponent {
       });
   }
 
-  openDialog(): void {
+  addFamilyMember(group: SafTChildCore.Group): void {
     const dialogRef = this.matDialog.open(GroupsModalComponent, {
       width: '300px',
-      data: { inputData: 'your data' },
+      data: { inputData: group},
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
       console.log(result);
+      this.reload()
+    });
+  }
+
+  editUser(group: SafTChildCore.Group, user: SafTChildCore.User): void {
+    const dialogRef = this.matDialog.open(GroupsModalComponent, {
+      width: '300px',
+      data: { inputData: group, inputData2: user},
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      console.log(result);
+      this.reload()
     });
   }
 

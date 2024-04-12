@@ -27,6 +27,7 @@ interface GroupsMembers {
   styleUrl: './groups-modal.component.scss',
 })
 export class GroupsModalComponent implements OnInit, OnDestroy {
+  groupId: string | null = null;
   user: NamedDocumentKey = {
     id: this.userAuthenticationService.getUserId() || '',
     name: this.userAuthenticationService.getFirstName() || '',
@@ -80,15 +81,39 @@ export class GroupsModalComponent implements OnInit, OnDestroy {
     private safTChildProxyService: SafTChildProxyService,
     private userAuthenticationService: UserAuthenticationService,
   ) {
+    this.populateData();
+
     this.safTChildProxyService.getRoles().subscribe({
       next: (roles) => {
         this.roles = roles;
       },
       error: (e) => {
-        console.log('error occured');
+        console.log('error occured getting role');
         console.log(e);
       },
     });
+
+    this.safTChildProxyService
+      .getGroupsByOwnerId(this.user.id)
+      .subscribe((groups) => {
+        console.log(groups);
+      });
+  }
+
+  populateData(): void {
+    if (this.data && this.data.inputData) {
+      const group = this.data.inputData;
+      this.groupId = group.id;
+
+      if(this.data.inputData2) {
+        const user = this.data.inputData2;
+        this.firstName = user.firstName;
+        this.lastName = user.lastName;
+        this.email = user.email;
+        this.phoneNumber = user.phoneNumber;
+        this.role = user.role;
+      }
+    }
   }
 
   addNew(tab: string): void {
@@ -132,18 +157,22 @@ export class GroupsModalComponent implements OnInit, OnDestroy {
     phoneNumber = _.toNumber(phoneNumber);
     user.primaryPhoneNumber.phoneNumberValue = phoneNumber;
 
-    this.safTChildProxyService.insertTempUser(user).subscribe({
-      next: (group) => {
-        this.dialogRef.close({
-          action: 'save',
-          data: group,
-        });
-      },
-      error: (e) => {
-        console.log('error occured');
-        console.log(e);
-      },
-    });
+    if(this.groupId != null)
+    {
+      const insertId = this.groupId;
+      this.safTChildProxyService.insertTempUser(user, insertId).subscribe({
+        next: (group) => {
+          this.dialogRef.close({
+            action: 'save',
+            data: group,
+          });
+        },
+        error: (e) => {
+          console.log('error occured');
+          console.log(e);
+        },
+      });
+    }
   }
 
   onClose(): void {

@@ -3,7 +3,7 @@
   Saf-T Child device detects an emergency, and will be notified before emergency services.
 </p>
 <button matTooltip="Add Item" class="btn">
-  <span class="material-icons" (click)="openDialog()">add</span>
+  <span class="material-icons" (click)="addFamilyMember(groups[0])">add</span>
 </button>
 
 <div class="list-group gap-3">
@@ -33,7 +33,7 @@
               </li>
               <li>
                 <button class="btn dropdown-item d-flex align-items-center">
-                  <span class="material-icons me-2" (click)="openDialog()"
+                  <span class="material-icons me-2" (click)="editUser(groups[0], user)"
                     >edit</span
                   >Edit
                 </button>
