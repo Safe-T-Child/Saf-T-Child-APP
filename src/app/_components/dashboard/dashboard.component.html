@@ -1,4 +1,11 @@
 <div class="container d-flex flex-column gap-3 dashboard-main">
+  <div
+    class="alert alert-fixed alert-warning"
+    role="alert"
+    *ngIf="showVerificationMessage"
+  >
+    {{ emailVerificationMessage }}
+  </div>
   <div class="container d-flex flex-row justify-content-between mt-3">
     <ul class="nav nav-tabs flex-grow-1">
       <li class="nav-item">

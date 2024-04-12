@@ -54,7 +54,11 @@ export class LoginComponent implements OnInit {
       .subscribe((response) => {
         this.isLoading = false;
         if (response) {
-          this.router.navigate(['/dashboard']);
+          //add query params
+
+          this.router.navigate(['/dashboard'], {
+            queryParams: { firstLogin: true },
+          });
         } else {
           this.showInvalidLogin = true;
         }
