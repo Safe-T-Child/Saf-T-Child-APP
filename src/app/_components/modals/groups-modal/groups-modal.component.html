@@ -1,7 +1,17 @@
-<h2 mat-dialog-title>Add New Family Member</h2>
+<app-loading-overlay *ngIf="isLoading"></app-loading-overlay>
+
+<div
+  class="alert alert-success alert-fixed"
+  role="alert"
+  *ngIf="showSuccessMessage"
+>
+  {{ successMessage }}
+</div>
+
+<h2 mat-dialog-title>{{ data.title }} Family Member</h2>
 <mat-dialog-content>
   <form [formGroup]="form">
-    <div class="form-box">
+    <div class="form-box" *ngIf="!editing">
       <label for="firstName">First Name</label>
       <input
         type="text"
@@ -13,7 +23,7 @@
         Please enter a valid first name.
       </span>
     </div>
-    <div class="form-box">
+    <div class="form-box" *ngIf="!editing">
       <label for="lastName">Last Name</label>
       <input
         type="text"
@@ -25,7 +35,7 @@
         Please enter a valid last name.
       </span>
     </div>
-    <div class="form-box">
+    <div class="form-box" *ngIf="!editing">
       <label for="email">Email</label>
       <input
         type="text"
@@ -34,13 +44,26 @@
         class="form-control"
       />
       <span
-        *ngIf="!email.errors?.['email'] && email.touched"
+        *ngIf="email.errors?.['email'] && email.touched"
         class="text-danger"
       >
-        Please enter a valid email.
+        Please enter a valid email address.
+      </span>
+      <span
+        *ngIf="
+          !email.errors?.['email'] &&
+          email.errors?.['emailTaken'] &&
+          email.touched
+        "
+        class="text-danger"
+      >
+        Email address associated to existing account.
+        <a class="btn btn-secondary" type="button" (click)="sendInvite(true)"
+          >Invite User</a
+        >
       </span>
     </div>
-    <div class="form-box">
+    <div class="form-box" *ngIf="!editing">
       <label for="phoneNumber">Phone Number</label>
       <input
         type="number"
@@ -55,6 +78,22 @@
         class="text-danger"
       >
         Please enter a valid phone number.
+      </span>
+      <span
+        *ngIf="
+          !phoneNumber.errors?.['invalidPhoneNumber'] &&
+          phoneNumber.touched &&
+          phoneNumber.errors?.['phoneNumberTaken']
+        "
+        class="text-danger"
+      >
+        Phone number associated to existing account.
+        <a
+          class="btn btn-primary main-aqua"
+          type="button"
+          (click)="sendInvite(false)"
+          >Invite User</a
+        >
       </span>
     </div>
     <div class="form-box">
@@ -72,7 +111,7 @@
     class="btn btn-primary"
     type="submit"
     (click)="onSave()"
-    [disabled]="form.status === 'INVALID'"
+    [disabled]="!canSave"
   >
     Save
   </button>
