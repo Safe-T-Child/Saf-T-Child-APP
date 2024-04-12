@@ -56,8 +56,8 @@ export class DevicesComponent {
 
   openDialog(): void {
     const dialogRef = this.matDialog.open(DevicesModalComponent, {
-      width: '250px',
-      data: { activationCode: this.activationCode },
+      width: '300px',
+      data: { activationCode: this.activationCode, title: 'Add' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -84,6 +84,28 @@ export class DevicesComponent {
       this.reload();
       this.isLoading = false;
     });
+  }
+
+  editDevice(device: SafTChildCore.Device) {
+    const dialogRef = this.matDialog.open(DevicesModalComponent, {
+      width: '300px',
+      data: { inputData: device, title: 'Edit' },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.reload();
+    });
+  }
+
+  deleteDevice(device: SafTChildCore.Device) {
+    if (confirm('Are you sure you want to delete this device?')) {
+      // this.isLoading = true;
+      // this.safTChildProxyService.deleteDevice(device).subscribe(() => {
+      //   this.reload();
+      //   this.isLoading = false;
+      // });
+      console.log('Device deleted');
+    }
   }
 
   reload(): void {

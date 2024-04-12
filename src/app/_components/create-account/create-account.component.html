@@ -24,12 +24,26 @@
     <form [formGroup]="formGroup" class="d-flex flex-column gap-3">
       <p class="m-0">**All fields are required.</p>
       <div class="form-box">
+        <label for="activationCode">Device Activation Code</label>
+        <input
+          type="number"
+          id="activationCode"
+          [formControl]="activationCode"
+          class="form-control"
+        />
+      </div>
+      <div id="success-device" class="d-flex align-items-center" *ngIf="device">
+        <span class="material-icons" style="color: green"
+          >check_circle_outline</span
+        >
+        <p style="margin-bottom: 0px">Device found</p>
+      </div>
+      <div class="form-box">
         <label for="firstName" class="form-label">First Name</label>
         <input
           type="text"
           class="form-control"
           id="firstName"
-          placeholder="John"
           formControlName="firstName"
         />
         <span
@@ -46,7 +60,6 @@
           type="text"
           class="form-control"
           id="lastName"
-          placeholder="Doe"
           formControlName="lastName"
         />
         <span *ngIf="lastName?.invalid && lastName.touched" class="text-danger">
@@ -81,7 +94,7 @@
           Email address associated to existing account.
         </span>
       </div>
-      <!-- TODO: only allow numbers to be inputed -->
+
       <div class="form-box">
         <label
           for="phoneNumber"
@@ -91,8 +104,9 @@
           matTooltipTouchGestures="on"
           >Phone Number</label
         >
+
         <input
-          type="text"
+          type="number"
           class="form-control"
           id="phoneNumber"
           placeholder="5029998888"
@@ -114,17 +128,41 @@
           "
           class="text-danger"
         >
-          Phone number associated to existing account.
+          Phone number associated to existing account. Continue to
+          <a href="/login" class="login-link">Login</a>
         </span>
+
+        <div class="verification-container" *ngIf="phoneNumber.valid">
+          <button
+            class="btn btn-primary mb-3"
+            (click)="sendVerification()"
+            *ngIf="!verificationSent"
+          >
+            Send Verification Code
+          </button>
+
+          <!-- Verification code input and verify button will appear only after the verification is sent -->
+          <div *ngIf="verificationSent">
+            <input
+              type="text"
+              class="form-control mb-2"
+              id="verificationCode"
+              placeholder="Enter verification code"
+              [formControl]="verificationCode"
+            />
+            <button class="btn btn-success" (click)="verifyCode()">
+              Verify Code
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="form-box">
         <label for="password" class="form-label">Password</label>
         <input
-          type="password"
+          type="text"
           class="form-control"
           id="password"
-          placeholder="Password"
           formControlName="password"
         />
         <span
@@ -147,7 +185,46 @@
         >
           Invalid password.
         </span>
+        <ul class="list-unstyled">
+          <li
+            [ngClass]="{
+              'text-success':
+                !formGroup.get('password')?.errors?.['minLengthError'],
+              'text-danger':
+                formGroup.get('password')?.errors?.['minLengthError']
+            }"
+          >
+            Minimum 8 characters
+          </li>
+          <li
+            [ngClass]="{
+              'text-success':
+                !formGroup.get('password')?.errors?.['uppercaseError'],
+              'text-danger':
+                formGroup.get('password')?.errors?.['uppercaseError']
+            }"
+          >
+            At least one uppercase letter
+          </li>
+          <li
+            [ngClass]="{
+              'text-success':
+                !formGroup.get('password')?.errors?.['specialCharError'],
+              'text-danger':
+                formGroup.get('password')?.errors?.['specialCharError']
+            }"
+          >
+            At least one special character (e.g., !#$%^&amp;*)
+          </li>
+          <li
+            class="text-danger"
+            *ngIf="formGroup.get('password')?.errors?.['invalidCharError']"
+          >
+            Invalid character
+          </li>
+        </ul>
       </div>
+
       <button
         type="button"
         class="btn btn-primary btn-main-aqua"

@@ -1,7 +1,7 @@
-<h2 mat-dialog-title>Add New Device</h2>
+<h2 mat-dialog-title>{{ data.title }} Device</h2>
 <mat-dialog-content>
   <form [formGroup]="form">
-    <div class="form-box">
+    <div class="form-box" *ngIf="!deviceEditId">
       <label for="activationCode">Device Activation Code</label>
       <input
         type="number"
@@ -13,7 +13,7 @@
     <div
       id="success-device"
       class="d-flex align-items-center"
-      *ngIf="device.value"
+      *ngIf="device.value && !deviceEditId"
     >
       <span class="material-icons" style="color: green"
         >check_circle_outline</span
@@ -28,18 +28,6 @@
         formControlName="name"
         class="form-control"
       />
-    </div>
-    <div class="form-box">
-      <label for="group">Group</label>
-      <select id="group" formControlName="group" class="form-select">
-        <option value="null" selected *ngIf="!group.value" hidden>
-          Select a group
-        </option>
-        <option *ngFor="let g of groups" [ngValue]="g">{{ g.name }}</option>
-      </select>
-      <p *ngIf="group.disabled">
-        Add a new <a (click)="addNew('groups')" class="link-style">group</a>
-      </p>
     </div>
     <div class="form-box">
       <label for="vehicle">Vehicle</label>

@@ -1,4 +1,4 @@
-// saf-t-child.service.proxy.ts
+import { VerificationCode } from './../_models/Twilio';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, from, of, throwError } from 'rxjs';
@@ -26,6 +26,11 @@ export class SafTChildProxyService {
     });
   }
 
+  getUsers(): Observable<SafTChildCore.User> {
+    const controller = 'user';
+    return this.http.get<SafTChildCore.User>(`${this.baseUrl}/${controller}`);
+  }
+  
   getRoles(): Observable<SafTChildCore.Role[]> {
     return this.http.get<SafTChildCore.Role[]>(
       `${this.baseUrl}/${this.userController}/getRoles`,
@@ -130,6 +135,21 @@ export class SafTChildProxyService {
   verifyEmail(token: string): Observable<any> {
     return this.http.get(
       `${this.baseUrl}/${this.validationController}/verifyEmailAddress?token=${token}`,
+    );
+  }
+
+  sendPhoneNumberVerificationCode(phoneNumber: string): Observable<any> {
+    const phoneNumberURI = encodeURIComponent(phoneNumber);
+    return this.http.post(
+      `${this.baseUrl}/${this.validationController}/sendVerificationCode?phoneNumber=${phoneNumberURI}`,
+      { phoneNumber },
+    );
+  }
+
+  verifyPhoneNumber(phoneNumber: string, code: string): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/${this.validationController}/verifyCode`,
+      { phoneNumber, code },
     );
   }
 }

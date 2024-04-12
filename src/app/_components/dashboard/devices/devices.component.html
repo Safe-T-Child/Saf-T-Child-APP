@@ -1,5 +1,9 @@
 <app-loading-overlay [isLoading]="isLoading"></app-loading-overlay>
 
+<p>
+  Add and manage Saf-T Child devices. Devices can be added, changed, or removed
+</p>
+
 <button matTooltip="Add Item" class="btn" (click)="openDialog()">
   <span class="material-icons">add</span>
 </button>
@@ -52,7 +56,10 @@
                 </a>
               </li>
               <li>
-                <a class="dropdown-item d-flex align-items-center">
+                <a
+                  class="dropdown-item d-flex align-items-center"
+                  (click)="editDevice(device)"
+                >
                   <span class="material-icons me-2">edit</span>Edit
                 </a>
               </li>

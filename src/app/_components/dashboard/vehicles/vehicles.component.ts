@@ -71,14 +71,17 @@ export class VehiclesComponent {
   }
 
   deleteVehicle(vehicle: SafTChildCore.Vehicle): void {
-    this.safTChildProxyService.deleteVehicle(vehicle).subscribe({
-      next: (vehicle) => {
-        this.reload();
-      },
-      error: (e) => {
-        console.log('Error occured deleting vehicle');
-        console.log(e);
-      },
-    });
+    //Yes, no dialog
+    if (confirm('Are you sure you want to delete this vehicle?')) {
+      this.safTChildProxyService.deleteVehicle(vehicle).subscribe({
+        next: (vehicle) => {
+          this.reload();
+        },
+        error: (e) => {
+          console.log('Error occured deleting vehicle');
+          console.log(e);
+        },
+      });
+    }
   }
 }
