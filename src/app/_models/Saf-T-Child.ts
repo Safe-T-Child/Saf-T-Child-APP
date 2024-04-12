@@ -64,4 +64,7 @@ export interface Vehicle {
   owner: NamedDocumentKey;
 }
 
-export interface Device {}
+export interface EmailTaken {
+  isEmailTaken: boolean;
+  isTempUser?: boolean;
+}
