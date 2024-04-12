@@ -26,8 +26,14 @@ export class CreateAccountComponent implements OnInit {
   contentActive = false;
   showInvalidLogin = false;
   isLoading = false;
+  isSendingVerification = false;
+  verificationSentError = false;
+  wrongVerificationCode = false;
+  successMessage = "User added successfully. Redirecting to Login.'";
   verificationSent = false;
   codeVerified = false;
+  canResend = false;
+  countdown = 45;
   showSuccessMessage = false;
 
   verificationCode: FormControl<number | null> = new FormControl(
@@ -111,6 +117,7 @@ export class CreateAccountComponent implements OnInit {
 
     this.activationCode.valueChanges.subscribe((value) => {
       const valueString = value?.toString();
+
       if (valueString && valueString.length === 9) {
         this.safTChildProxyService
           .getDeviceByActivationCode(valueString)
@@ -120,6 +127,13 @@ export class CreateAccountComponent implements OnInit {
       } else {
         this.device = null;
       }
+    });
+    this.phoneNumber.valueChanges.subscribe((value) => {
+      this.verificationSent = false;
+      this.codeVerified = false;
+      this.canResend = false;
+      this.countdown = 45;
+      this.verificationCode.reset();
     });
   }
 
@@ -133,14 +147,39 @@ export class CreateAccountComponent implements OnInit {
     const phoneNumber = value.toString();
     const phoneNumberString = '+1' + phoneNumber.toString();
 
+    this.isSendingVerification = true;
+
     this.safTChildProxyService
       .sendPhoneNumberVerificationCode(phoneNumberString)
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.verificationSent = true;
+          // add 45 second timer
+          this.isSendingVerification = false;
+          this.canResend = false;
+          this.countdown = 45;
+          setTimeout(() => (this.canResend = true), 45000); // 45 seconds till resend is allowed
+
+          // Start the countdown
+          let interval = setInterval(() => {
+            this.countdown--;
+            if (this.countdown === 0) {
+              clearInterval(interval);
+            }
+          }, 1000);
         },
         error: (e) => {
+          this.isSendingVerification = false;
+          this.showSuccessMessage = true;
+          this.successMessage =
+            'Error sending verification code. Please try again later.';
+          this.verificationSentError = true;
+          setTimeout(() => {
+            this.verificationSentError = false;
+            this.showSuccessMessage = false;
+          }, 3000); // 3000
+
+          this.verificationSentError = true;
           console.log(e);
         },
       });
@@ -149,6 +188,7 @@ export class CreateAccountComponent implements OnInit {
   verifyCode() {
     const value = this.verificationCode.value;
     const phoneNumberValue = this.phoneNumber.value;
+    this.wrongVerificationCode = false;
 
     if (!value || !phoneNumberValue) {
       return;
@@ -163,6 +203,8 @@ export class CreateAccountComponent implements OnInit {
           if (res.status === 'approved') {
             this.codeVerified = true;
             console.log(this.codeVerified);
+          } else {
+            this.wrongVerificationCode = true;
           }
         },
         error: (e) => {
@@ -210,6 +252,7 @@ export class CreateAccountComponent implements OnInit {
     this.safTChildProxyService.insertNewUser(user, activationCode).subscribe({
       next: (user) => {
         this.userAuthenticationService.logout();
+        this.successMessage = 'User added successfully. Redirecting to Login.';
         this.showSuccessMessage = true;
         this.isLoading = false;
         setTimeout(() => {

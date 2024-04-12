@@ -1,9 +1,13 @@
 <div
-  class="alert alert-success alert-fixed"
+  class="alert alert-fixed"
+  [ngClass]="{
+    'alert-danger': verificationSentError,
+    'alert-success': !verificationSentError
+  }"
   role="alert"
   *ngIf="showSuccessMessage"
 >
-  User added successfully. Redirecting to Login.
+  {{ successMessage }}
 </div>
 
 <app-loading-overlay [isLoading]="isLoading"></app-loading-overlay>
@@ -148,14 +152,27 @@
             class="btn btn-primary mb-3"
             (click)="sendVerification()"
             *ngIf="!verificationSent"
+            [disabled]="isSendingVerification"
           >
             Send Verification Code
           </button>
 
+          <div *ngIf="verificationSent && !codeVerified" class="mb-3">
+            <button
+              class="btn btn-primary mb-3"
+              (click)="sendVerification()"
+              [disabled]="!canResend"
+            >
+              {{
+                canResend ? "Resend Code" : "Resend Code (" + countdown + "s)"
+              }}
+            </button>
+          </div>
+
           <!-- Verification code input and verify button will appear only after the verification is sent -->
           <div *ngIf="verificationSent && !codeVerified">
             <input
-              type="text"
+              type="number"
               class="form-control mb-2"
               id="verificationCode"
               placeholder="Enter verification code"
@@ -165,6 +182,13 @@
               Verify Code
             </button>
           </div>
+          <p
+            style="margin-bottom: 0px"
+            class="text-danger"
+            *ngIf="wrongVerificationCode"
+          >
+            Wrong verification code
+          </p>
           <div
             id="success-device"
             class="d-flex align-items-center"
