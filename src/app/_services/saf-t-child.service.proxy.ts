@@ -26,23 +26,34 @@ export class SafTChildProxyService {
     });
   }
 
-  getUsers(): Observable<SafTChildCore.User> {
+  getUser(userId: string): Observable<SafTChildCore.User> {
     const controller = 'user';
-    return this.http.get<SafTChildCore.User>(`${this.baseUrl}/${controller}`);
+    return this.http.get<SafTChildCore.User>(
+      `${this.baseUrl}/${controller}/getUserById?id=${userId}`,
+    );
   }
-  
+
   getRoles(): Observable<SafTChildCore.Role[]> {
     return this.http.get<SafTChildCore.Role[]>(
       `${this.baseUrl}/${this.userController}/getRoles`,
     );
   }
 
-  insertNewUser(user: SafTChildCore.User): Observable<any> {
-    return this.http.post(`${this.baseUrl}/${this.userController}`, user);
+  insertNewUser(
+    user: SafTChildCore.User,
+    deviceActivationNumber: number,
+  ): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/${this.userController}/insertUser?deviceActivationNumber=${deviceActivationNumber}`,
+      user,
+    );
   }
 
   insertTempUser(user: SafTChildCore.User): Observable<any> {
-    return this.http.post(`${this.baseUrl}/${this.userController}`, user);
+    return this.http.post(
+      `${this.baseUrl}/${this.userController}/insertTempUser?group`,
+      user,
+    );
   }
 
   // Devices endpoints
@@ -118,8 +129,8 @@ export class SafTChildProxyService {
     );
   }
 
-  checkEmail(email: string): Observable<boolean> {
-    return this.http.get<boolean>(
+  checkEmail(email: string): Observable<SafTChildCore.EmailTaken> {
+    return this.http.get<SafTChildCore.EmailTaken>(
       `${this.baseUrl}/${this.validationController}/checkEmail?email=${email}`,
     );
   }
@@ -141,15 +152,23 @@ export class SafTChildProxyService {
   sendPhoneNumberVerificationCode(phoneNumber: string): Observable<any> {
     const phoneNumberURI = encodeURIComponent(phoneNumber);
     return this.http.post(
-      `${this.baseUrl}/${this.validationController}/sendVerificationCode?phoneNumber=${phoneNumberURI}`,
+      `${this.baseUrl}/${this.validationController}/SendVerificationCode?phoneNumber=${phoneNumberURI}`,
       { phoneNumber },
     );
   }
 
   verifyPhoneNumber(phoneNumber: string, code: string): Observable<any> {
     return this.http.post(
-      `${this.baseUrl}/${this.validationController}/verifyCode`,
+      `${this.baseUrl}/${this.validationController}/VerifyCode`,
       { phoneNumber, code },
+    );
+  }
+
+  sendEmailVerificationCode(email: string): Observable<any> {
+    const emailUri = encodeURIComponent(email);
+    return this.http.post(
+      `${this.baseUrl}/${this.validationController}/sendVerificationEmail?email=${emailUri}`,
+      { email },
     );
   }
 }

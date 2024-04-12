@@ -14,6 +14,7 @@ import {
 import * as _ from 'lodash';
 import * as SafTChildCore from '../../_models/Saf-T-Child';
 import { Observable, catchError, map, of } from 'rxjs';
+import { UserAuthenticationService } from '../../_services/user-authentication.service';
 
 @Component({
   selector: 'app-create-account',
@@ -27,6 +28,7 @@ export class CreateAccountComponent implements OnInit {
   isLoading = false;
   verificationSent = false;
   codeVerified = false;
+  showSuccessMessage = false;
 
   verificationCode: FormControl<number | null> = new FormControl(
     null,
@@ -50,7 +52,7 @@ export class CreateAccountComponent implements OnInit {
     // Custom validator
   ]);
 
-  activationCode: FormControl<string | null> = new FormControl<string | null>(
+  activationCode: FormControl<number | null> = new FormControl<number | null>(
     null,
     [Validators.required, Validators.maxLength(9), Validators.minLength(9)],
   );
@@ -82,12 +84,12 @@ export class CreateAccountComponent implements OnInit {
 
   test: FormControl<string | null> = new FormControl(null, Validators.required);
 
-  // get validForm() {
-  //   if (this.formGroup.valid && ) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  get validForm() {
+    if (this.formGroup.valid && this.codeVerified && this.device) {
+      return true;
+    }
+    return false;
+  }
 
   ngOnInit() {
     this.contentActive = true;
@@ -98,6 +100,7 @@ export class CreateAccountComponent implements OnInit {
   }
   constructor(
     private safTChildProxyService: SafTChildProxyService,
+    private userAuthenticationService: UserAuthenticationService,
     private fb: FormBuilder,
     private router: Router,
   ) {
@@ -194,15 +197,30 @@ export class CreateAccountComponent implements OnInit {
     phoneNumber = _.toNumber(phoneNumber);
     user.primaryPhoneNumber.phoneNumberValue = phoneNumber;
 
+    const activationCode = this.activationCode.value;
+
+    if (!activationCode) {
+      return;
+    }
+
     user.password = formControls['password'].value;
 
-    this.safTChildProxyService.insertNewUser(user).subscribe({
+    this.isLoading = true;
+
+    this.safTChildProxyService.insertNewUser(user, activationCode).subscribe({
       next: (user) => {
-        this.router.navigate(['/dashboard']);
+        this.userAuthenticationService.logout();
+        this.showSuccessMessage = true;
+        this.isLoading = false;
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+          this.isLoading = false;
+        }, 3000); // 3000
       },
       error: (e) => {
         console.log('error occured');
         console.log(e);
+        this.isLoading = false;
       },
     });
   }
@@ -261,7 +279,10 @@ export class CreateAccountComponent implements OnInit {
     return this.safTChildProxyService.checkEmail(email).pipe(
       map((res) => {
         // If the username exists, res should be truthy, and we return an error object.
-        return res ? { emailTaken: true } : null;
+        if (res.isEmailTaken) {
+          return { emailTaken: true };
+        }
+        return null;
       }),
       catchError(() => {
         return of(null);
