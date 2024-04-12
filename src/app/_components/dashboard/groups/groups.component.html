@@ -1,16 +1,19 @@
+<app-loading-overlay *ngIf="isLoading"></app-loading-overlay>
+
 <p>
-  Add family or friends to be emergency contacts. These members will be contacted in the event the 
-  Saf-T Child device detects an emergency, and will be notified before emergency services.
+  Add family or friends to be emergency contacts. These members will be
+  contacted in the event the Saf-T Child device detects an emergency, and will
+  be notified before emergency services.
 </p>
-<button matTooltip="Add Item" class="btn">
-  <span class="material-icons" (click)="addFamilyMember(groups[0])">add</span>
+<button matTooltip="Add Item" class="btn" (click)="addFamilyMember(group)">
+  <span class="material-icons">add</span>
 </button>
 
 <div class="list-group gap-3">
   <div class="card vehicle-pill" *ngFor="let user of users">
     <div class="card-body">
       <div class="d-flex w-100 justify-content-between align-items-center">
-        <h2 class="mb-1">{{ user.firstName }}</h2>
+        <h2 class="mb-1">{{ user.firstName }} {{ user.lastName }}</h2>
         <div class="d-flex align-items-center gap-3">
           <div class="dropdown">
             <button
@@ -26,16 +29,17 @@
               <li>
                 <button
                   class="btn dropdown-item d-flex align-items-center"
-                  (click)="deleteMember()"
+                  (click)="deleteMember(user)"
                 >
                   <span class="material-icons me-2">delete</span>Delete
                 </button>
               </li>
               <li>
-                <button class="btn dropdown-item d-flex align-items-center">
-                  <span class="material-icons me-2" (click)="editUser(groups[0], user)"
-                    >edit</span
-                  >Edit
+                <button
+                  class="btn dropdown-item d-flex align-items-center"
+                  (click)="editUser(group, user)"
+                >
+                  <span class="material-icons me-2">edit</span>Edit
                 </button>
               </li>
             </ul>

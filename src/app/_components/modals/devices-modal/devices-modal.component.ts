@@ -23,6 +23,7 @@ import { UserAuthenticationService } from '../../../_services/user-authenticatio
 })
 export class DevicesModalComponent implements OnInit, OnDestroy {
   deviceEditId: string | null = null;
+  isLoading = false;
   user: NamedDocumentKey = {
     id: this.userAuthenticationService.getUserId() || '',
     name: this.userAuthenticationService.getFirstName() || '',
@@ -160,9 +161,14 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
         };
       }
 
+      if (this.isLoading) return;
+
+      this.isLoading = true;
+
       if (this.deviceEditId) {
         this.saftTChildProxyService.updateDevice(device).subscribe({
           next: (updatedDevice) => {
+            this.isLoading = false;
             this.dialogRef.close({
               action: 'save',
               data: updatedDevice,
@@ -170,17 +176,20 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
           },
           error: (error) => {
             console.error('Error updating device', error);
+            this.isLoading = false;
           },
         });
       } else {
         this.saftTChildProxyService.updateDevice(device).subscribe({
           next: (updatedDevice) => {
+            this.isLoading = false;
             this.dialogRef.close({
               action: 'save',
               data: updatedDevice,
             });
           },
           error: (error) => {
+            this.isLoading = false;
             console.error('Error updating device', error);
           },
         });

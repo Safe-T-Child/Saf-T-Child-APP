@@ -46,11 +46,16 @@ export interface Device {
   group?: NamedDocumentKey;
 }
 
+export interface UserWithRole extends NamedDocumentKey {
+  role: string;
+  acceptedInvite: boolean;
+}
+
 export interface Group {
   id?: string; // UUID
   name: string;
   owner: NamedDocumentKey;
-  users: NamedDocumentKey[];
+  users: UserWithRole[];
 }
 
 export interface Vehicle {

@@ -26,6 +26,46 @@ export class SafTChildProxyService {
     });
   }
 
+  getUserByEmail(email: string): Observable<SafTChildCore.User> {
+    return this.http.get<SafTChildCore.User>(
+      `${this.baseUrl}/${this.userController}/getUserByEmail?email=${email}`,
+    );
+  }
+
+  getUserByPhoneNumber(phoneNumber: string): Observable<SafTChildCore.User> {
+    //HARDCODE FOR NOW
+    return this.http.get<SafTChildCore.User>(
+      `${this.baseUrl}/${this.userController}/getUserByPhoneNumber?CountryCode=1&PhoneNumberValue=${phoneNumber}`,
+    );
+  }
+
+  sendGroupInviteEmail(userId: string, groupId: string): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/${this.groupController}/sendGroupInviteEmail?newUserId=${userId}&groupId=${groupId}`,
+      {},
+    );
+  }
+
+  updateGroup(group: SafTChildCore.Group): Observable<SafTChildCore.Group> {
+    return this.http.put<SafTChildCore.Group>(
+      `${this.baseUrl}/${this.groupController}/${group.id}`,
+      group,
+    );
+  }
+
+  getUsersByGroupId(groupId: string): Observable<SafTChildCore.User[]> {
+    return this.http.get<SafTChildCore.User[]>(
+      `${this.baseUrl}/${this.userController}/getUsersByGroupId?groupId=${groupId}`,
+    );
+  }
+
+  updateUser(user: SafTChildCore.User): Observable<SafTChildCore.User> {
+    return this.http.put<SafTChildCore.User>(
+      `${this.baseUrl}/${this.userController}/updateUser?id=${user.id}`,
+      user,
+    );
+  }
+
   getUser(userId: string): Observable<SafTChildCore.User> {
     const controller = 'user';
     return this.http.get<SafTChildCore.User>(
@@ -50,10 +90,12 @@ export class SafTChildProxyService {
   }
 
   insertTempUser(user: SafTChildCore.User, groupId: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/${this.userController}/insertTempUser?groupId=${groupId}`, user,
+    return this.http.post(
+      `${this.baseUrl}/${this.userController}/insertTempUser?groupId=${groupId}`,
+      user,
     );
   }
-  
+
   // Devices endpoints
   updateDevice(device: SafTChildCore.Device): Observable<SafTChildCore.Device> {
     return this.http.put<SafTChildCore.Device>(
