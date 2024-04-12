@@ -11,3 +11,32 @@
 .form-label {
   margin-bottom: 0px !important;
 }
+
+ul {
+  margin-top: 1rem;
+  margin-left: 20px;
+  list-style-type: disc; /* This will add the default disc bullet points */
+}
+
+.verification-container {
+  margin-top: 1rem;
+
+  button {
+    margin-bottom: 0px !important;
+  }
+}
+
+.alert-fixed {
+  position: fixed;
+  top: 20%; /* Adjust this value to move it up or down */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050; /* Ensures it stays on top */
+  width: 80%; /* Adjust based on your preference */
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

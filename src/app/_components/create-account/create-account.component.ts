@@ -14,6 +14,7 @@ import {
 import * as _ from 'lodash';
 import * as SafTChildCore from '../../_models/Saf-T-Child';
 import { Observable, catchError, map, of } from 'rxjs';
+import { UserAuthenticationService } from '../../_services/user-authentication.service';
 
 @Component({
   selector: 'app-create-account',
@@ -25,12 +26,14 @@ export class CreateAccountComponent implements OnInit {
   contentActive = false;
   showInvalidLogin = false;
   isLoading = false;
+  verificationSent = false;
+  codeVerified = false;
+  showSuccessMessage = false;
 
-  // TODO: Delete when pushing to prod. This comments are for educations purposes only
-  // 1. All our inputs will be formControls. We declare the form control
-  // as their own variables. This allows use to check for their status or their value without
-  // having to refer to their formGroup. This technique is valid to be used
-  // when there are no other formgroup.
+  verificationCode: FormControl<number | null> = new FormControl(
+    null,
+    Validators.required,
+  );
 
   firstName: FormControl<string | null> = new FormControl(
     null,
@@ -49,6 +52,11 @@ export class CreateAccountComponent implements OnInit {
     // Custom validator
   ]);
 
+  activationCode: FormControl<number | null> = new FormControl<number | null>(
+    null,
+    [Validators.required, Validators.maxLength(9), Validators.minLength(9)],
+  );
+
   //TODO: Add email validation
   // make sure that email is good and that
   // it is not assigned to another account
@@ -56,17 +64,13 @@ export class CreateAccountComponent implements OnInit {
     Validators.required,
     Validators.email,
   ]);
-  password: FormControl<string | null> = new FormControl(null, [
+  password: FormControl<string | null> = new FormControl('', [
     Validators.required,
     this.passwordValidator,
   ]);
 
-  // TODO: DELETE TOO
-  // After all our formcontrols have been created add them into one fromgroup
-  // This will facilitate whenever we want to check if the form is ready to be submitted.
-  // The form group will be valid ONLY when ALL the controls, that are required, have a VALID status
-
   formGroup: FormGroup = new FormGroup({
+    activationCode: this.activationCode,
     password: this.password,
     firstName: this.firstName,
     lastName: this.lastName,
@@ -74,7 +78,18 @@ export class CreateAccountComponent implements OnInit {
     email: this.email,
   });
 
+  device: SafTChildCore.Device | null = null;
+
   isMobile: boolean = window.innerWidth < windowBreakpoint; // Example breakpoint
+
+  test: FormControl<string | null> = new FormControl(null, Validators.required);
+
+  get validForm() {
+    if (this.formGroup.valid && this.codeVerified && this.device) {
+      return true;
+    }
+    return false;
+  }
 
   ngOnInit() {
     this.contentActive = true;
@@ -85,6 +100,7 @@ export class CreateAccountComponent implements OnInit {
   }
   constructor(
     private safTChildProxyService: SafTChildProxyService,
+    private userAuthenticationService: UserAuthenticationService,
     private fb: FormBuilder,
     private router: Router,
   ) {
@@ -92,6 +108,67 @@ export class CreateAccountComponent implements OnInit {
       this.phoneNumberUniqueValidator.bind(this),
     );
     this.email.setAsyncValidators(this.emailUniqueValidator.bind(this));
+
+    this.activationCode.valueChanges.subscribe((value) => {
+      const valueString = value?.toString();
+      if (valueString && valueString.length === 9) {
+        this.safTChildProxyService
+          .getDeviceByActivationCode(valueString)
+          .subscribe((device) => {
+            this.device = device;
+          });
+      } else {
+        this.device = null;
+      }
+    });
+  }
+
+  sendVerification() {
+    const value = this.phoneNumber.value;
+
+    if (!value) {
+      return;
+    }
+
+    const phoneNumber = value.toString();
+    const phoneNumberString = '+1' + phoneNumber.toString();
+
+    this.safTChildProxyService
+      .sendPhoneNumberVerificationCode(phoneNumberString)
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          this.verificationSent = true;
+        },
+        error: (e) => {
+          console.log(e);
+        },
+      });
+  }
+
+  verifyCode() {
+    const value = this.verificationCode.value;
+    const phoneNumberValue = this.phoneNumber.value;
+
+    if (!value || !phoneNumberValue) {
+      return;
+    }
+
+    const phoneNumber = '+1' + phoneNumberValue.toString();
+
+    this.safTChildProxyService
+      .verifyPhoneNumber(phoneNumber, value.toString())
+      .subscribe({
+        next: (res) => {
+          if (res.status === 'approved') {
+            this.codeVerified = true;
+            console.log(this.codeVerified);
+          }
+        },
+        error: (e) => {
+          console.log(e);
+        },
+      });
   }
 
   // This will only be triggered when the formgroup is ready
@@ -120,15 +197,30 @@ export class CreateAccountComponent implements OnInit {
     phoneNumber = _.toNumber(phoneNumber);
     user.primaryPhoneNumber.phoneNumberValue = phoneNumber;
 
+    const activationCode = this.activationCode.value;
+
+    if (!activationCode) {
+      return;
+    }
+
     user.password = formControls['password'].value;
 
-    this.safTChildProxyService.insertNewUser(user).subscribe({
+    this.isLoading = true;
+
+    this.safTChildProxyService.insertNewUser(user, activationCode).subscribe({
       next: (user) => {
-        this.router.navigate(['/dashboard']);
+        this.userAuthenticationService.logout();
+        this.showSuccessMessage = true;
+        this.isLoading = false;
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+          this.isLoading = false;
+        }, 3000); // 3000
       },
       error: (e) => {
         console.log('error occured');
         console.log(e);
+        this.isLoading = false;
       },
     });
   }
@@ -137,7 +229,14 @@ export class CreateAccountComponent implements OnInit {
   // You will use the new endpoint on the API to do so.
 
   americanPhoneNumberValidator(control: AbstractControl) {
-    const phoneNumber = control.value;
+    const value = control.value;
+
+    if (!value) {
+      return null;
+    }
+
+    const phoneNumber = value.toString();
+
     if (!Number.isNaN(Number(phoneNumber)) && phoneNumber) {
       if (phoneNumber.length != 10) {
         return { invalidPhoneNumber: true };
@@ -180,7 +279,10 @@ export class CreateAccountComponent implements OnInit {
     return this.safTChildProxyService.checkEmail(email).pipe(
       map((res) => {
         // If the username exists, res should be truthy, and we return an error object.
-        return res ? { emailTaken: true } : null;
+        if (res.isEmailTaken) {
+          return { emailTaken: true };
+        }
+        return null;
       }),
       catchError(() => {
         return of(null);
@@ -194,7 +296,12 @@ export class CreateAccountComponent implements OnInit {
     // TODO: Add country code form control
     // Hardcoded to USA country code for now
     const countryCode = 1;
-    const phoneNumber = control.value;
+    const value = control.value;
+
+    if (!value) {
+      return of(null);
+    }
+    const phoneNumber = value.toString();
 
     // Check if the control value is empty and consider it as valid directly to avoid unnecessary API call.
     if (!phoneNumber) {
@@ -222,9 +329,37 @@ export class CreateAccountComponent implements OnInit {
     // - Special characters (!@#$%^&*()-_+=)
     // - No spaces
     // - Minimum length of 8
-    const regex =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()-_+=])[A-Za-z\d!@#$%^&*()-_+=]{8,}$/;
-    const valid = regex.test(control.value);
-    return valid ? null : { invalidPassword: { value: control.value } };
+    const errors: { [key: string]: any } = {};
+
+    if ((control.value && control.value.length < 8) || control.value === '') {
+      errors['minLengthError'] = {
+        message: 'Password must be at least 8 characters long.',
+      };
+    }
+
+    // Check for at least one uppercase letter
+    if (!/[A-Z]/.test(control.value)) {
+      errors['uppercaseError'] = {
+        message: 'Password must contain at least one uppercase letter.',
+      };
+    }
+
+    // Check for at least one special character
+    if (!/[!@#$%^&*()-_+=]/.test(control.value)) {
+      errors['specialCharError'] = {
+        message:
+          'Password must contain at least one special character (!@#$%^&*()-_+=).',
+      };
+    }
+
+    // Check for any invalid characters
+    if (/[^A-Za-z\d!@#$%^&*()-_+=]/.test(control.value)) {
+      errors['invalidCharError'] = {
+        message: 'Password contains invalid characters.',
+      };
+    }
+
+    // Return null if no errors, or an error object with details about each failing case
+    return Object.keys(errors).length === 0 ? null : errors;
   }
 }

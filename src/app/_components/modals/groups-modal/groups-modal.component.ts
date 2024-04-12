@@ -32,19 +32,39 @@ export class GroupsModalComponent implements OnInit, OnDestroy {
     name: this.userAuthenticationService.getFirstName() || '',
   };
 
+  roles: SafTChildCore.Role[] = [];
+
   device: FormControl<SafTChildCore.Device | null> =
     this.fb.nonNullable.control<SafTChildCore.Device | null>(null);
 
-  firstName: FormControl<string> = this.fb.nonNullable.control<string>('');
-  lastName: FormControl<string> = this.fb.nonNullable.control<string>('');
-  email: FormControl<string> = this.fb.nonNullable.control<string>('');
-  phoneNumber: FormControl<string> = this.fb.nonNullable.control<string>('');
+  firstName: FormControl<string> = this.fb.nonNullable.control<string>(
+    '',
+    Validators.required,
+  );
+  lastName: FormControl<string> = this.fb.nonNullable.control<string>(
+    '',
+    Validators.required,
+  );
+  email: FormControl<string> = this.fb.nonNullable.control<string>(
+    '',
+    Validators.required,
+  );
+  phoneNumber: FormControl<string> = this.fb.nonNullable.control<string>(
+    '',
+    Validators.required,
+  );
+  role: FormControl<SafTChildCore.Role | null> =
+    this.fb.nonNullable.control<SafTChildCore.Role | null>(
+      null,
+      Validators.required,
+    );
 
   form: FormGroup = new FormGroup({
     firstName: this.firstName,
     lastName: this.lastName,
     email: this.email,
     phoneNumber: this.phoneNumber,
+    role: this.role,
   });
 
   groupMembers: GroupsMembers = {
@@ -57,11 +77,19 @@ export class GroupsModalComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private modalGuardService: ModalGuardService,
-    private saftTChildProxyService: SafTChildProxyService,
+    private safTChildProxyService: SafTChildProxyService,
     private userAuthenticationService: UserAuthenticationService,
-    private router: Router,
-    private matDialog: MatDialog,
-  ) {}
+  ) {
+    this.safTChildProxyService.getRoles().subscribe({
+      next: (roles) => {
+        this.roles = roles;
+      },
+      error: (e) => {
+        console.log('error occured');
+        console.log(e);
+      },
+    });
+  }
 
   addNew(tab: string): void {
     if (
@@ -78,17 +106,44 @@ export class GroupsModalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {}
 
-  @HostListener('window:beforeunload', ['$event'])
-  preventUnsavedChanges(event: BeforeUnloadEvent): void {
-    if (this.form.dirty) {
-      event.returnValue = true; // Chrome requires returnValue to be set
-    }
-  }
+  onSave() {
+    // In here use the insert temp user endpoint that micah created.
+    // we should display if the user has accepted or decline the invite.
+    // similar to have we show the device is active or not.
+    const formControls = this.form.controls;
 
-  onSave(): void {
-    if (this.form.valid) {
-      console.log(this.form.value);
-    }
+    const user: SafTChildCore.User = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      primaryPhoneNumber: {
+        countryCode: 1, // Hard code for now
+        phoneNumberValue: 0,
+      },
+      isEmailVerified: false,
+      secondaryPhoneNumbers: [],
+    };
+
+    user.email = formControls['email'].value;
+    user.lastName = formControls['lastName'].value;
+    user.firstName = formControls['firstName'].value;
+
+    let phoneNumber = formControls['phoneNumber'].value;
+    phoneNumber = _.toNumber(phoneNumber);
+    user.primaryPhoneNumber.phoneNumberValue = phoneNumber;
+
+    this.safTChildProxyService.insertTempUser(user).subscribe({
+      next: (group) => {
+        this.dialogRef.close({
+          action: 'save',
+          data: group,
+        });
+      },
+      error: (e) => {
+        console.log('error occured');
+        console.log(e);
+      },
+    });
   }
 
   onClose(): void {
