@@ -30,8 +30,18 @@ export class SafTChildProxyService {
     const controller = 'user';
     return this.http.get<SafTChildCore.User>(`${this.baseUrl}/${controller}`);
   }
+  
+  getRoles(): Observable<SafTChildCore.Role[]> {
+    return this.http.get<SafTChildCore.Role[]>(
+      `${this.baseUrl}/${this.userController}/getRoles`,
+    );
+  }
 
   insertNewUser(user: SafTChildCore.User): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${this.userController}`, user);
+  }
+
+  insertTempUser(user: SafTChildCore.User): Observable<any> {
     return this.http.post(`${this.baseUrl}/${this.userController}`, user);
   }
 

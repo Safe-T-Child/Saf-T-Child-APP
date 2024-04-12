@@ -21,6 +21,11 @@ export interface User {
   isEmailVerified: boolean; // Required for all users
 }
 
+export interface Role extends NamedDocumentKey {
+  permissions: string[]; // not needed rn but will be needed in the future
+  description: string;
+}
+
 export interface TempUser {
   id?: string;
   firstName: string;
