@@ -20,6 +20,8 @@ export class GroupsComponent {
   };
   users: SafTChildCore.User[] = [];
   group: SafTChildCore.Group = {} as SafTChildCore.Group;
+  usersWithRoles: SafTChildCore.UserWithRole[] = [];
+
   constructor(
     public matDialog: MatDialog,
     private safTChildProxyService: SafTChildProxyService,
@@ -43,6 +45,7 @@ export class GroupsComponent {
           return;
         }
         this.group = group;
+        this.usersWithRoles = group.users;
 
         this.safTChildProxyService
           .getUsersByGroupId(group?.id || '')
@@ -68,6 +71,17 @@ export class GroupsComponent {
       console.log(result);
       this.reload();
     });
+  }
+
+  getUserWithRole(user: SafTChildCore.User): SafTChildCore.UserWithRole | null {
+    const role = _.find(this.group.users, (u) => u.id === user.id);
+    if(role != null) {
+        return role;
+    }
+    else {
+      return null;
+    }
+    
   }
 
   editUser(group: SafTChildCore.Group, user: SafTChildCore.User): void {

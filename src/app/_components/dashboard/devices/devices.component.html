@@ -37,7 +37,7 @@
             class="badge"
             [ngClass]="device.status ? 'bg-success' : 'bg-danger'"
           >
-            {{ device.status }}
+            {{ device.status ? 'Active' : 'Inactive'}}
           </small>
           <div class="dropdown">
             <button
