@@ -159,6 +159,8 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
           name: this.vehicle.value.name,
           id: this.vehicle.value.id || '',
         };
+      } else {
+        device.car = undefined;
       }
 
       if (this.isLoading) return;

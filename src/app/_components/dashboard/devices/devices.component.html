@@ -37,7 +37,7 @@
             class="badge"
             [ngClass]="device.status ? 'bg-success' : 'bg-danger'"
           >
-            {{ device.status ? 'Active' : 'Inactive'}}
+            {{ device.status ? "Active" : "Inactive" }}
           </small>
           <div class="dropdown">
             <button
@@ -51,7 +51,10 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <li>
-                <a class="dropdown-item d-flex align-items-center" href="#">
+                <a
+                  class="dropdown-item d-flex align-items-center"
+                  (click)="deleteDevice(device)"
+                >
                   <span class="material-icons me-2">delete</span>Delete
                 </a>
               </li>
