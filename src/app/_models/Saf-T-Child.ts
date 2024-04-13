@@ -41,7 +41,7 @@ export interface Device {
   model: string;
   deviceId: string;
   car?: NamedDocumentKey;
-  owner: NamedDocumentKey;
+  owner?: NamedDocumentKey;
   status: string;
   group?: NamedDocumentKey;
 }

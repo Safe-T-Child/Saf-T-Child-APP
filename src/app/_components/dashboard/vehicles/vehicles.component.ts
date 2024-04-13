@@ -73,12 +73,30 @@ export class VehiclesComponent {
   deleteVehicle(vehicle: SafTChildCore.Vehicle): void {
     //Yes, no dialog
     if (confirm('Are you sure you want to delete this vehicle?')) {
-      this.safTChildProxyService.deleteVehicle(vehicle).subscribe({
-        next: (vehicle) => {
-          this.reload();
+      this.isLoading = true;
+      this.safTChildProxyService.getDevicesByOwnerId(this.user.id).subscribe({
+        next: (devices) => {
+          const device = devices.find((d) => d.car?.id === vehicle.id);
+
+          if (!device) {
+            this.safTChildProxyService.deleteVehicle(vehicle).subscribe({
+              next: () => {
+                this.isLoading = false;
+                this.reload();
+              },
+              error: (e) => {
+                console.log('Error occured deleting vehicle');
+                console.log(e);
+              },
+            });
+          } else {
+            this.isLoading = false;
+            alert('Cannot delete vehicle as it is associated with a device');
+          }
         },
         error: (e) => {
-          console.log('Error occured deleting vehicle');
+          this.isLoading = false;
+          console.log('Error occured getting devices');
           console.log(e);
         },
       });

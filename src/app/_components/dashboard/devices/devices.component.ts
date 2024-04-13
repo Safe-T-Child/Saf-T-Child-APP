@@ -99,12 +99,22 @@ export class DevicesComponent {
 
   deleteDevice(device: SafTChildCore.Device) {
     if (confirm('Are you sure you want to delete this device?')) {
-      // this.isLoading = true;
-      // this.safTChildProxyService.deleteDevice(device).subscribe(() => {
-      //   this.reload();
-      //   this.isLoading = false;
-      // });
-      console.log('Device deleted');
+      this.isLoading = true;
+
+      device.owner = undefined;
+      device.car = undefined;
+      device.group = undefined;
+
+      this.safTChildProxyService.updateDevice(device).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.reload();
+        },
+        error: (error) => {
+          console.error(error);
+          this.isLoading = false;
+        },
+      });
     }
   }
 
