@@ -1,26 +1,108 @@
-<div class="content d-flex justify-content-center align-items-center p-5">
+<app-loading-overlay [isLoading]="isLoading"></app-loading-overlay>
+<div class="alert alert-fixed {{ alertClass }}" role="alert" *ngIf="showAlert">
+  {{ alertMessage }}
+</div>
+<div
+  class="content d-flex justify-content-center align-items-center flex-column"
+>
   <div
-    class="d-flex bg-white p-4 m-2 rounded-3 shadow flex-column justify-content-center gap-3"
+    class="d-flex bg-white p-4 m-2 rounded-3 shadow flex-column justify-content-center gap-3 align-items-center"
     [ngClass]="!isMobile ? 'desktop-custom-width' : 'custom-max-width-vw'"
+    *ngIf="group !== null && owner !== null && user !== null"
   >
-    <p>Hello Jonathan Hernandez</p>
-    <p>You have been invited to join the group "Group 1" by "User 1".</p>
+    <p>Hello {{ user.firstName }} {{ user.lastName }}</p>
+    <p>
+      You have been invited to join the group "{{ group.name }}" by
+      {{ owner.firstName }} {{ owner.lastName }}.
+    </p>
 
+    <!-- Phone number verification container -->
     <div
-      class="content d-flex flex-column justify-content-center align-items-center p-3"
+      class="verification-container d-flex justify-content-center align-items-center flex-column"
+      *ngIf="phoneNumber !== ''"
+    >
+      <p class="text-center">
+        Please verify your phone number to accept the invitation. We will send a
+        verification code to your phone number.
+      </p>
+      <p class="text-center">Phone Number: {{ phoneNumber }}</p>
+      <button
+        class="btn btn-primary mb-3 btn-main-aqua"
+        (click)="sendVerification()"
+        *ngIf="!verificationSent"
+        [disabled]="isSendingVerification"
+      >
+        Send Verification Code
+      </button>
+
+      <div
+        *ngIf="verificationSent && !codeVerified"
+        class="mb-3 d-flex justify-content-center align-items-center flex-column"
+      >
+        <button
+          class="btn btn-primary mb-3"
+          (click)="sendVerification()"
+          [disabled]="!canResend"
+        >
+          {{ canResend ? "Resend Code" : "Resend Code (" + countdown + "s)" }}
+        </button>
+      </div>
+
+      <div
+        *ngIf="verificationSent && !codeVerified"
+        class="d-flex justify-content-center align-items-center flex-column"
+      >
+        <input
+          type="number"
+          class="form-control mb-2"
+          id="verificationCode"
+          placeholder="Enter verification code"
+          [formControl]="verificationCode"
+        />
+        <button class="btn btn-success" (click)="verifyCode()">
+          Verify Code
+        </button>
+      </div>
+      <p
+        style="margin-bottom: 0px"
+        class="text-danger"
+        *ngIf="wrongVerificationCode"
+      >
+        Wrong verification code
+      </p>
+      <div
+        id="success-device"
+        class="d-flex align-items-center"
+        *ngIf="codeVerified"
+      >
+        <span class="material-icons" style="color: green"
+          >check_circle_outline</span
+        >
+        <p style="margin-bottom: 0px">Phone Number Verified</p>
+      </div>
+    </div>
+
+    <!-- Accept/Decline buttons will appear only if the phone number is verified -->
+    <div
+      *ngIf="codeVerified"
+      class="d-flex flex-column justify-content-center align-items-center p-3"
     >
       <h3>Do you accept the invitation?</h3>
-
       <div class="d-flex flex-row gap-1">
-        <button class="btn btn-primary btn-main-aqua">Accept</button>
-        <button class="btn btn-secondary">Decline</button>
+        <button class="btn btn-primary btn-main-aqua" (click)="acceptInvite()">
+          Accept
+        </button>
+        <button class="btn btn-secondary" (click)="declineInvite()">
+          Decline
+        </button>
       </div>
     </div>
   </div>
+
+  <app-display-token-error
+    *ngIf="token === ''"
+    [alertMessage]="tokenAlertMessage"
+    [errorAction]="'resetting password'"
+    [routeTo]="'about'"
+  ></app-display-token-error>
 </div>
-<app-display-token-error
-  *ngIf="token === ''"
-  [alertMessage]="alertMessage"
-  [errorAction]="'resetting password'"
-  [routeTo]="'about'"
-></app-display-token-error>

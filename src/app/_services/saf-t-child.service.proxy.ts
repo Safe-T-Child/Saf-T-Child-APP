@@ -110,6 +110,18 @@ export class SafTChildProxyService {
     );
   }
 
+  getGroupById(groupId: string): Observable<SafTChildCore.Group> {
+    return this.http.get<SafTChildCore.Group>(
+      `${this.baseUrl}/${this.groupController}/${groupId}`,
+    );
+  }
+
+  getDevicesByUserId(userId: string): Observable<SafTChildCore.Device[]> {
+    return this.http.get<SafTChildCore.Device[]>(
+      `${this.baseUrl}/${this.deviceController}/by-user/${userId}`,
+    );
+  }
+
   getDeviceByActivationCode(number: string): Observable<SafTChildCore.Device> {
     return this.http.get<SafTChildCore.Device>(
       `${this.baseUrl}/${this.deviceController}/by-activation-code/${number}`,

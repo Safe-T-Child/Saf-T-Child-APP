@@ -25,6 +25,7 @@ export class DevicesComponent {
   isLoading: boolean = false;
   activationCode: string | null = null;
   vehicles: SafTChildCore.Vehicle[] = [];
+  nonOwnerDevices: SafTChildCore.Device[] = [];
 
   constructor(
     public matDialog: MatDialog,
@@ -50,6 +51,13 @@ export class DevicesComponent {
       .getDevicesByOwnerId(this.user.id)
       .subscribe((devices) => {
         this.devices = devices;
+        this.isLoading = false;
+      });
+    this.isLoading = true;
+    this.safTChildProxyService
+      .getDevicesByUserId(this.user.id)
+      .subscribe((devices) => {
+        this.nonOwnerDevices = devices;
         this.isLoading = false;
       });
   }
