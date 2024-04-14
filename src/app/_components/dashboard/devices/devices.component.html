@@ -22,6 +22,7 @@
             <option *ngIf="device.car" [value]="device.car.id" selected>
               {{ device.car.name }}
             </option>
+            <option *ngIf="!device.car" selected></option>
             <ng-container *ngFor="let vehicle of vehicles">
               <option
                 *ngIf="device.car?.id !== vehicle.id"

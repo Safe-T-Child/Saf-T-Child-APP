@@ -13,6 +13,7 @@ export class DashboardComponent implements OnInit {
   isMobile: boolean = window.innerWidth < windowBreakpoint;
   emailVerificationMessage = `Emai Verification has been sent. Please check your email to verify your account.`;
   showVerificationMessage = false;
+  currentTab = 'devices';
 
   constructor(
     public matDialog: MatDialog,
@@ -34,6 +35,10 @@ export class DashboardComponent implements OnInit {
         });
       }
     });
+  }
+
+  changeTab(tab: string) {
+    this.currentTab = tab;
   }
 
   ngOnInit() {}
