@@ -1,3 +1,5 @@
+@import "../../../assets/styles/color.scss";
+
 .device-pill {
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -25,4 +27,19 @@
   transform: translateX(-50%);
   z-index: 1050; /* Ensures it stays on top */
   width: 80%; /* Adjust based on your preference */
+}
+
+.nav-link {
+  color: $main_aqua_t1;
+}
+
+.nav-link:hover {
+  background-color: #f8f9fa;
+  color: $main_aqua_t1;
+}
+
+.nav-link.active {
+  color: white;
+  background-color: $main_aqua_t1;
+  border-color: $main_aqua_t1;
 }
