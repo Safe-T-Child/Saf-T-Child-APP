@@ -6,20 +6,70 @@
   >
     {{ emailVerificationMessage }}
   </div>
-  <div class="container d-flex flex-row justify-content-between mt-3">
-    <ul class="nav nav-tabs flex-grow-1">
+  <!-- <div class="container d-flex flex-row justify-content-between mt-3">
+    <ul class="nav nav-tabs flex-grow-1" id="myTab">
       <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" routerLink="/dashboard/devices"
+        <a
+          (click)="changeTab('devices')"
+          class="nav-link"
+          data-toggle="tab"
+          [class.active]="currentTab === 'devices'"
+          routerLink="/dashboard/devices"
           >Devices</a
         >
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" routerLink="/dashboard/vehicles"
+        <a
+          (click)="changeTab('vehicles')"
+          class="nav-link"
+          [class.active]="currentTab === 'vehicles'"
+          data-toggle="tab"
+          routerLink="/dashboard/vehicles"
           >Vehicles</a
         >
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" routerLink="/dashboard/groups"
+        <a
+          (click)="changeTab('family')"
+          class="nav-link"
+          [class.active]="currentTab === 'family'"
+          data-toggle="tab"
+          routerLink="/dashboard/groups"
+          >Family</a
+        >
+      </li>
+    </ul>
+  </div> -->
+
+  <div class="container d-flex flex-row justify-content-between mt-3">
+    <ul class="nav nav-tabs flex-grow-1">
+      <li class="nav-item">
+        <a
+          (click)="changeTab('devices')"
+          class="nav-link"
+          data-toggle="tab"
+          [class.active]="currentTab === 'devices'"
+          routerLink="/dashboard/devices"
+          >Devices</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          (click)="changeTab('vehicles')"
+          class="nav-link"
+          [class.active]="currentTab === 'vehicles'"
+          data-toggle="tab"
+          routerLink="/dashboard/vehicles"
+          >Vehicles</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          (click)="changeTab('family')"
+          class="nav-link"
+          [class.active]="currentTab === 'family'"
+          data-toggle="tab"
+          routerLink="/dashboard/groups"
           >Family</a
         >
       </li>

@@ -78,6 +78,19 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
       },
     });
 
+    this.saftTChildProxyService.getGroupsByOwnerId(this.user.id).subscribe({
+      next: (groups) => {
+        const group = groups[0];
+
+        if (group) {
+          this.group.setValue(group);
+        }
+      },
+      error: (error) => {
+        console.error('Error getting groups', error);
+      },
+    });
+
     this.activationCode.valueChanges.subscribe((value) => {
       const valueString = value?.toString();
       if (valueString && valueString.length === 9) {
@@ -148,10 +161,14 @@ export class DevicesModalComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   onSave(): void {
-    if (this.form.valid && this.device.value) {
+    if (this.form.valid && this.device.value && this.group.value) {
       const device = this.device.value;
       device.name = this.name.value;
       device.owner = this.user;
+      device.group = {
+        name: this.group.value.name,
+        id: this.group.value.id || '',
+      };
 
       // TODO: change model from car to vehicle
       if (this.vehicle.value) {
