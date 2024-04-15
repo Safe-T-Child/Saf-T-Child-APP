@@ -15,6 +15,7 @@ import { VerifyEmailComponent } from './_components/verify-email/verify-email.co
 import { PageNotFoundComponent } from './_components/page-not-found/page-not-found.component';
 import { GenerateResetPasswordComponent } from './_components/generate-reset-password/generate-reset-password.component';
 import { FaqComponent } from './_components/faq/faq.component';
+import { AccountComponent } from './_components/account/account.component';
 
 const routes: Routes = [
   { path: 'bootstrap-samples', component: BootstrapSamplesComponent },
@@ -25,6 +26,11 @@ const routes: Routes = [
   },
   { path: 'about', component: AboutComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {
+    path: 'account',
+    component: AccountComponent,
+    canActivate: [AuthGuardService],
+  },
   {
     path: 'dashboard',
     component: DashboardComponent,

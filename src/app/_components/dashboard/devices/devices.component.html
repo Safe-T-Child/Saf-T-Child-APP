@@ -73,4 +73,44 @@
       </div>
     </div>
   </div>
+  <div class="card device-pill" *ngFor="let device of nonOwnerDevices">
+    <div class="card-body">
+      <div class="d-flex w-100 justify-content-between align-items-center">
+        <div class="d-flex flex-column">
+          <h2 class="mb-1">{{ device.name }}</h2>
+          <label *ngIf="canManageDevice(device)" class="mb-0"
+            >Current Vehicle</label
+          >
+          <select
+            *ngIf="canManageDevice(device)"
+            class="form-select"
+            aria-label="Default select example"
+            (change)="changeVehicle($event.target, device)"
+          >
+            <option *ngIf="device.car" [value]="device.car.id" selected>
+              {{ device.car.name }}
+            </option>
+            <option *ngIf="!device.car" selected></option>
+            <ng-container *ngFor="let vehicle of vehicles">
+              <option
+                *ngIf="device.car?.id !== vehicle.id"
+                [value]="vehicle.id"
+              >
+                {{ vehicle.name }}
+              </option>
+            </ng-container>
+          </select>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <small
+            class="badge"
+            [ngClass]="device.status ? 'bg-success' : 'bg-danger'"
+          >
+            {{ device.status ? "Active" : "Inactive" }}
+          </small>
+          <small class="badge bg-secondary"> No-Owner </small>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

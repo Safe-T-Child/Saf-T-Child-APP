@@ -190,8 +190,16 @@ export class SafTChildProxyService {
   //Reset password
   sendResetPasswordEmail(email: string): Observable<any> {
     return this.http.post(
-      `${this.baseUrl}/${this.userController}/forgotUserPassword?email=${email}`,
+      `${this.baseUrl}/${this.validationController}/sendPasswordReset?email=${email}`,
       { email },
+    );
+  }
+
+  updateUserPassword(id: string, password: string): Observable<any> {
+    const passwordUri = encodeURIComponent(password);
+    return this.http.put(
+      `${this.baseUrl}/${this.userController}/updateUserPassword?id=${id}&password=${passwordUri}`,
+      {},
     );
   }
 

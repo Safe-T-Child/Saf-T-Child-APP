@@ -1,24 +1,118 @@
-.custom-max-width-vw {
-  max-width: 20rem;
-  min-width: 20rem;
-}
-  
-.desktop-custom-width {
-  max-width: 40rem;
-  min-width: 30rem;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.d-custom-bg {
+h1 {
   display: flex;
-  justify-content: center;
-  background-image: url(/assets/baby_background.png);
-  background-position: right;
-  background-size: auto 100%;
-  background-repeat: no-repeat;
+  align-items: center; // Ensures the logo and text are aligned at the same height
+  justify-content: center; // Centers the content, you can adjust this based on design
+  white-space: nowrap;
+  img {
+    margin-left: 5px;
+  }
 }
 
-.d-custom {
+.about-page {
   position: relative;
-  overflow: hidden;
+  background: url("/assets/background.jpg") no-repeat center center/cover;
+  color: white;
   text-align: center;
+  padding: 50px 20px;
+
+  .inspiring-image {
+    z-index: 3;
+    width: 100%; // Ensures the image is responsive
+    height: auto; // Maintains the aspect ratio of the image
+    max-width: 600px; // Sets the maximum width of the image
+    max-height: 400px; // Sets the maximum height of the image
+    display: block;
+    margin: 20px auto; // Centers the image horizontally and adds space above and below
+    border-radius: 8px;
+    // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1; // Ensure lower z-index than content
+    animation: fadeIn 2s ease-out;
+  }
+
+  .hero-content,
+  .detailed-content {
+    position: relative;
+    z-index: 2; // Higher z-index to ensure visibility above the overlay
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+
+    .safety-icon {
+      font-size: 3rem;
+      color: #4caf50;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+  }
+
+  .detailed-content {
+    z-index: 2;
+    .section {
+      margin-top: 40px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+
+      .icon {
+        font-size: 2rem;
+        color: #29b6f6;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+      }
+
+      p {
+        font-size: 1rem;
+        text-align: left;
+        margin: 10px 0;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

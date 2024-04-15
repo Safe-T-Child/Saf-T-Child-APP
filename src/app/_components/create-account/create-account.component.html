@@ -147,7 +147,7 @@
 
         <div class="verification-container" *ngIf="phoneNumber.valid">
           <button
-            class="btn btn-primary mb-3"
+            class="btn btn-primary mb-3 btn-main-aqua"
             (click)="sendVerification()"
             *ngIf="!verificationSent"
             [disabled]="isSendingVerification"
@@ -157,7 +157,7 @@
 
           <div *ngIf="verificationSent && !codeVerified" class="mb-3">
             <button
-              class="btn btn-primary mb-3"
+              class="btn btn-primary mb-3 btn-main-aqua"
               (click)="sendVerification()"
               [disabled]="!canResend"
             >

@@ -35,6 +35,7 @@ import { DisplayTokenErrorComponent } from './_components/display-token-error/di
 import { GenerateResetPasswordComponent } from './_components/generate-reset-password/generate-reset-password.component';
 import { FaqComponent } from './_components/faq/faq.component';
 import { LoadingOverlayComponent } from './_components/loading-overlay/loading-overlay.component';
+import { AccountComponent } from './_components/account/account.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { LoadingOverlayComponent } from './_components/loading-overlay/loading-o
     GenerateResetPasswordComponent,
     FaqComponent,
     LoadingOverlayComponent,
+    AccountComponent,
   ],
   imports: [
     BrowserModule,
