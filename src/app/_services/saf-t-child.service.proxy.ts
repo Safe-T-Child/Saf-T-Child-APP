@@ -110,6 +110,18 @@ export class SafTChildProxyService {
     );
   }
 
+  getGroupById(groupId: string): Observable<SafTChildCore.Group> {
+    return this.http.get<SafTChildCore.Group>(
+      `${this.baseUrl}/${this.groupController}/${groupId}`,
+    );
+  }
+
+  getDevicesByUserId(userId: string): Observable<SafTChildCore.Device[]> {
+    return this.http.get<SafTChildCore.Device[]>(
+      `${this.baseUrl}/${this.deviceController}/by-user/${userId}`,
+    );
+  }
+
   getDeviceByActivationCode(number: string): Observable<SafTChildCore.Device> {
     return this.http.get<SafTChildCore.Device>(
       `${this.baseUrl}/${this.deviceController}/by-activation-code/${number}`,
@@ -178,8 +190,16 @@ export class SafTChildProxyService {
   //Reset password
   sendResetPasswordEmail(email: string): Observable<any> {
     return this.http.post(
-      `${this.baseUrl}/${this.userController}/forgotUserPassword?email=${email}`,
+      `${this.baseUrl}/${this.validationController}/sendPasswordReset?email=${email}`,
       { email },
+    );
+  }
+
+  updateUserPassword(id: string, password: string): Observable<any> {
+    const passwordUri = encodeURIComponent(password);
+    return this.http.put(
+      `${this.baseUrl}/${this.userController}/updateUserPassword?id=${id}&password=${passwordUri}`,
+      {},
     );
   }
 

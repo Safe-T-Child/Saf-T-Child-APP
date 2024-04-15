@@ -19,6 +19,17 @@ export class AuthInterceptor implements HttpInterceptor {
     if (request.url.startsWith(environment.safTChildApiUrl)) {
       const token = localStorage.getItem('Saf-T-ChildToken');
 
+      const tempPoraryToken = localStorage.getItem('temporaryToken');
+
+      if (tempPoraryToken && !token) {
+        const tempAuthRequest = request.clone({
+          setHeaders: {
+            Authorization: `Bearer ${tempPoraryToken}`,
+          },
+        });
+        return next.handle(tempAuthRequest);
+      }
+
       if (!token) {
         return next.handle(request);
       }

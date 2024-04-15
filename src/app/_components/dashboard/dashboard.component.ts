@@ -34,6 +34,16 @@ export class DashboardComponent implements OnInit {
           }
         });
       }
+
+      //get current url
+      const url = window.location.href;
+      if (url.includes('devices')) {
+        this.currentTab = 'devices';
+      } else if (url.includes('vehicles')) {
+        this.currentTab = 'vehicles';
+      } else if (url.includes('groups')) {
+        this.currentTab = 'family';
+      }
     });
   }
 

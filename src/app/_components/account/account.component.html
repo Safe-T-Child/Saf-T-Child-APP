@@ -1,0 +1,166 @@
+<div class="container mt-3 p-5 mb-6">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="mb-4">Manage Account</h2>
+      <form [formGroup]="formGroup" novalidate>
+        <!-- Success and Error Alerts -->
+        <div
+          *ngIf="showSuccessMessage"
+          class="alert"
+          [ngClass]="{
+            'alert-danger': verificationSentError,
+            'alert-success': !verificationSentError
+          }"
+          role="alert"
+        >
+          {{ successMessage }}
+        </div>
+
+        <!-- Name Update Section -->
+        <div class="mb-3">
+          <label for="firstName" class="form-label">First Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="firstName"
+            formControlName="firstName"
+          />
+          <div
+            *ngIf="
+              formGroup.get('firstName')?.errors &&
+              formGroup.get('firstName')?.touched
+            "
+            class="text-danger"
+          >
+            First name is required.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="lastName" class="form-label">Last Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="lastName"
+            formControlName="lastName"
+          />
+          <div
+            *ngIf="
+              formGroup.get('lastName')?.errors &&
+              formGroup.get('lastName')?.touched
+            "
+            class="text-danger"
+          >
+            Last name is required.
+          </div>
+        </div>
+
+        <!-- Phone Number Verification Section -->
+        <fieldset class="mb-3">
+          <div>
+            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <input
+              type="number"
+              class="form-control"
+              id="phoneNumber"
+              formControlName="phoneNumber"
+            />
+            <span
+              *ngIf="
+                phoneNumber.errors?.['invalidPhoneNumber'] &&
+                phoneNumber.touched
+              "
+              class="text-danger"
+            >
+              Please enter a valid phone number.
+            </span>
+            <span
+              *ngIf="
+                !phoneNumber.errors?.['invalidPhoneNumber'] &&
+                phoneNumber.touched &&
+                phoneNumber.errors?.['phoneNumberTaken']
+              "
+              class="text-danger"
+            >
+              Phone number associated to existing account. Continue to
+              <a href="/login" class="login-link">Login</a>
+            </span>
+
+            <div
+              class="verification-container"
+              *ngIf="
+                phoneNumber.touched &&
+                phoneNumber.valid &&
+                checkIfPhoneChanged()
+              "
+            >
+              <button
+                class="btn btn-primary mb-3 btn-main-aqua"
+                (click)="sendVerification()"
+                *ngIf="!verificationSent"
+                [disabled]="isSendingVerification"
+              >
+                Send Verification Code
+              </button>
+
+              <div *ngIf="verificationSent && !codeVerified" class="mb-3">
+                <button
+                  class="btn btn-primary mb-3 btn-main-aqua"
+                  (click)="sendVerification()"
+                  [disabled]="!canResend"
+                >
+                  {{
+                    canResend
+                      ? "Resend Code"
+                      : "Resend Code (" + countdown + "s)"
+                  }}
+                </button>
+              </div>
+
+              <!-- Verification code input and verify button will appear only after the verification is sent -->
+              <div *ngIf="verificationSent && !codeVerified">
+                <input
+                  type="number"
+                  class="form-control mb-2"
+                  id="verificationCode"
+                  placeholder="Enter verification code"
+                  [formControl]="verificationCode"
+                />
+                <button class="btn btn-success" (click)="verifyCode()">
+                  Verify Code
+                </button>
+              </div>
+              <p
+                style="margin-bottom: 0px"
+                class="text-danger"
+                *ngIf="wrongVerificationCode"
+              >
+                Wrong verification code
+              </p>
+              <div
+                id="success-device"
+                class="d-flex align-items-center"
+                *ngIf="codeVerified"
+              >
+                <span class="material-icons" style="color: green"
+                  >check_circle_outline</span
+                >
+                <p style="margin-bottom: 0px">Phone Number Verified</p>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Update Account Button -->
+        <button
+          type="button"
+          class="btn btn-primary btn-main-aqua"
+          (click)="save()"
+          [disabled]="!formGroup.valid"
+        >
+          Update Account
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

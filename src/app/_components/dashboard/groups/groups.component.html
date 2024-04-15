@@ -1,4 +1,7 @@
-<app-loading-overlay *ngIf="isLoading"></app-loading-overlay>
+<div class="alert alert-fixed {{ alertClass }}" role="alert" *ngIf="showAlert">
+  {{ alertMessage }}
+</div>
+<app-loading-overlay [isLoading]="isLoading"></app-loading-overlay>
 
 <p>
   Add family or friends to be emergency contacts. These members will be
@@ -17,10 +20,12 @@
         <div class="d-flex align-items-center gap-3">
           <small
             class="badge"
-            [ngClass]="getUserWithRole(user)?.acceptedInvite ? 'bg-success' : 'bg-danger'"
-            ng-show = 
+            [ngClass]="
+              getUserWithRole(user)?.acceptedInvite ? 'bg-success' : 'bg-danger'
+            "
+            ng-show=""
           >
-          {{getUserWithRole(user)?.acceptedInvite ? 'Active' : 'Inactive'}}
+            {{ getUserWithRole(user)?.acceptedInvite ? "Active" : "Inactive" }}
           </small>
           <div class="dropdown">
             <button
@@ -47,6 +52,14 @@
                   (click)="editUser(group, user)"
                 >
                   <span class="material-icons me-2">edit</span>Edit
+                </button>
+              </li>
+              <li *ngIf="!getUserWithRole(user)?.acceptedInvite">
+                <button
+                  class="btn dropdown-item d-flex align-items-center"
+                  (click)="resendInvite(user.id || '', group.id || '')"
+                >
+                  <span class="material-icons me-2">mail</span>Resend Inv.
                 </button>
               </li>
             </ul>

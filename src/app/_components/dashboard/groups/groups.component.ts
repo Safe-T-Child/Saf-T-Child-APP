@@ -14,6 +14,9 @@ import _ from 'lodash';
 })
 export class GroupsComponent {
   isLoading = false;
+  alertMessage = '';
+  alertClass = '';
+  showAlert = false;
   user: NamedDocumentKey = {
     id: this.userAuthenticationService.getUserId() || '',
     name: localStorage.getItem('name') || '',
@@ -60,6 +63,29 @@ export class GroupsComponent {
       });
   }
 
+  resendInvite(userId: string, groupId: string): void {
+    this.safTChildProxyService.sendGroupInviteEmail(userId, groupId).subscribe(
+      (response) => {
+        console.log('Invite sent');
+        this.alertClass = 'alert-success';
+        this.alertMessage = 'Invite sent';
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        }, 5000);
+      },
+      (error) => {
+        console.error('Error sending invite');
+        this.alertClass = 'alert-danger';
+        this.alertMessage = 'Error sending invite';
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        }, 5000);
+      },
+    );
+  }
+
   addFamilyMember(group: SafTChildCore.Group): void {
     const dialogRef = this.matDialog.open(GroupsModalComponent, {
       width: '300px',
@@ -75,13 +101,11 @@ export class GroupsComponent {
 
   getUserWithRole(user: SafTChildCore.User): SafTChildCore.UserWithRole | null {
     const role = _.find(this.group.users, (u) => u.id === user.id);
-    if(role != null) {
-        return role;
-    }
-    else {
+    if (role != null) {
+      return role;
+    } else {
       return null;
     }
-    
   }
 
   editUser(group: SafTChildCore.Group, user: SafTChildCore.User): void {

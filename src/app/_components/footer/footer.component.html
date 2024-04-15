@@ -16,6 +16,14 @@
       <h5>Menu</h5>
       <ul class="nav flex-column">
         <li *ngIf="userAuthenticated" class="nav-item mb-2">
+          <a href="/account" class="nav-link p-0 text-muted"> Account</a>
+        </li>
+        <li *ngIf="!userAuthenticated" class="nav-item mb-2">
+          <a href="/create-account" class="nav-link p-0 text-muted"
+            >Create Account</a
+          >
+        </li>
+        <li *ngIf="userAuthenticated" class="nav-item mb-2">
           <a href="/dashboard" class="nav-link p-0 text-muted">Dashboard</a>
         </li>
         <li class="nav-item mb-2">

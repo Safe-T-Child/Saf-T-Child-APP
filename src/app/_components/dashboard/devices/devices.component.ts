@@ -25,6 +25,8 @@ export class DevicesComponent {
   isLoading: boolean = false;
   activationCode: string | null = null;
   vehicles: SafTChildCore.Vehicle[] = [];
+  nonOwnerDevices: SafTChildCore.Device[] = [];
+  managableDevicesIds: string[] = [];
 
   constructor(
     public matDialog: MatDialog,
@@ -52,6 +54,38 @@ export class DevicesComponent {
         this.devices = devices;
         this.isLoading = false;
       });
+    this.isLoading = true;
+    this.safTChildProxyService
+      .getDevicesByUserId(this.user.id)
+      .subscribe((devices) => {
+        this.nonOwnerDevices = devices.filter(
+          (d) => d.owner?.id !== this.user.id,
+        );
+
+        _.forEach(this.nonOwnerDevices, (device) => {
+          if (!device.group?.id) {
+            return;
+          }
+          this.safTChildProxyService.getGroupById(device.group.id).subscribe({
+            next: (group) => {
+              const user = group.users.find((u) => u.id === this.user.id);
+
+              if (user?.role === 'Admin') {
+                this.managableDevicesIds.push(device?.id || '');
+              }
+            },
+            error: (error) => {
+              console.error(error);
+            },
+          });
+        });
+
+        this.isLoading = false;
+      });
+  }
+
+  canManageDevice(device: SafTChildCore.Device): boolean {
+    return this.managableDevicesIds.includes(device.id || '');
   }
 
   openDialog(): void {

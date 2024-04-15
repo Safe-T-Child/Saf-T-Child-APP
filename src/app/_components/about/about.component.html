@@ -1,30 +1,47 @@
-<div
-  class="content d-flex justify-content-center align-items-center d-custom-bg"
-  [class.active]="contentActive"
->
-  <div
-    class="d-flex p-4 m-2 rounded-3 shadow flex-column justify-content-center gap-3 bg-white"
-    [ngClass]="!isMobile ? 'desktop-custom-width' : 'custom-max-width-vw'"
-  >
-    <div
-      class="d-flex flex-column justify-content-center gap-1 align-items-center"
-    >
-      <h2>About Saf-T Child</h2>
-      <div class="d-inline d-custom">
-        <p>
-          Saf-T Child is a child safety device that is designed to save a
-          child's life in an emergency situation. Founded by Lorraine Forest
-          after learning of a terrible accident, Saf-T Child is designed to
-          ensure no child is left in a car, unattended, again. The device
-          component sits discreetly underneath any carseat, and detects when a
-          car is in motion and in use, or turned off and unattended. If a child
-          is detected in a carseat inside of a car that is turned off for 60
-          seconds, primary contacts are notified via an SMS text message. After,
-          if the child is not moved to saafety, a larger range of secondary
-          contacts are notified. If the child remains in the seat after a total
-          3 minutes unattended, local emergency services are contacted.
-        </p>
-      </div>
+<section class="about-page">
+  <div class="overlay" @fadeIn></div>
+  <div class="hero-content">
+    <mat-icon class="safety-icon">child_care</mat-icon>
+    <h1>
+      Welcome to
+      <img src="/assets/NewFullLogo.png" style="width: 135px; height: 35px" />
+    </h1>
+    <p>Protecting the most vulnerable with innovative technology.</p>
+  </div>
+  <img
+    src="/assets/baby_background.png"
+    alt="Inspiring Story"
+    class="inspiring-image"
+  />
+
+  <div class="detailed-content">
+    <div class="section">
+      <mat-icon class="icon">history_edu</mat-icon>
+      <h2>Our Story</h2>
+      <p>
+        Founded by Lorraine Forest after learning of a heart-breaking accident,
+        Saf-T Child is committed to ensuring that no child is ever left behind
+        in a car unattended again.
+      </p>
+    </div>
+    <div class="section">
+      <mat-icon class="icon">settings</mat-icon>
+      <h2>How It Works</h2>
+      <p>
+        The device sits discreetly underneath any car seat, detecting the
+        presence of a child and the vehicle’s status. Alerts are sent out to
+        primary and secondary contacts, escalating to emergency services if
+        needed.
+      </p>
+    </div>
+    <div class="section">
+      <mat-icon class="icon">support_agent</mat-icon>
+      <h2>Community Support</h2>
+      <p>
+        Join a growing community of parents and guardians using Saf-T Child to
+        enhance child safety. Share stories, tips, and get support from a
+        network committed to safety.
+      </p>
     </div>
   </div>
-</div>
+</section>

@@ -7,6 +7,16 @@ for transition and overlay effect
     <button class="close-btn" (click)="toggleOverlay()">&times;</button>
     <ul class="menu-list d-flex row gap-1">
       <li *ngIf="userAuthenticated">
+        <a class="menu-item" href="/account" (click)="toggleOverlay()"
+          >Manage Account</a
+        >
+      </li>
+      <li *ngIf="!userAuthenticated">
+        <a class="menu-item" href="/create-account" (click)="toggleOverlay()"
+          >Create Account</a
+        >
+      </li>
+      <li *ngIf="userAuthenticated">
         <a class="menu-item" href="/dashboard" (click)="toggleOverlay()"
           >Dashboard</a
         >
@@ -22,11 +32,6 @@ for transition and overlay effect
       </li>
       <li>
         <a class="menu-item" href="/faq" (click)="toggleOverlay()">FAQ</a>
-      </li>
-      <li>
-        <a class="menu-item" href="/create-account" (click)="toggleOverlay()"
-          >Create Account</a
-        >
       </li>
     </ul>
   </div>
