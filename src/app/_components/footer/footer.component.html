@@ -26,8 +26,11 @@
         <li *ngIf="userAuthenticated" class="nav-item mb-2">
           <a href="/dashboard" class="nav-link p-0 text-muted">Dashboard</a>
         </li>
-        <li class="nav-item mb-2">
+        <li class="nav-item mb-2" *ngIf="!userAuthenticated">
           <a href="/login" class="nav-link p-0 text-muted">Login</a>
+        </li>
+        <li class="nav-item mb-2" *ngIf="userAuthenticated">
+          <a href="/logout" class="nav-link p-0 text-muted">Logout</a>
         </li>
         <li class="nav-item mb-2">
           <a href="/about" class="nav-link p-0 text-muted">About</a>
