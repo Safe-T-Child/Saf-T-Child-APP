@@ -2,7 +2,7 @@ import { Component, HostListener, OnDestroy } from '@angular/core';
 import { windowBreakpoint } from '../../environment';
 import { Router } from '@angular/router';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { SafTChildProxyService } from '../../_services/saf-t-child.service.proxy';
 import { Group, User } from '../../_models/Saf-T-Child';
 import { set } from 'lodash';
@@ -40,8 +40,9 @@ export class AcceptGroupInviteComponent implements OnDestroy {
   user: User | null = null;
   owner: User | null = null;
 
-  verificationCode: FormControl<number | null> = new FormControl<number | null>(
+  verificationCode: FormControl<string | null> = new FormControl<string | null>(
     null,
+    Validators.pattern('^[0-9]*$'),
   );
 
   constructor(
@@ -253,21 +254,19 @@ export class AcceptGroupInviteComponent implements OnDestroy {
       return;
     }
 
-    this.safTChildProxyService
-      .verifyPhoneNumber(phoneNumber, value.toString())
-      .subscribe({
-        next: (res) => {
-          if (res.status === 'approved') {
-            this.codeVerified = true;
-            console.log(this.codeVerified);
-          } else {
-            this.wrongVerificationCode = true;
-          }
-        },
-        error: (e) => {
-          console.log(e);
-        },
-      });
+    this.safTChildProxyService.verifyPhoneNumber(phoneNumber, value).subscribe({
+      next: (res) => {
+        if (res.status === 'approved') {
+          this.codeVerified = true;
+          console.log(this.codeVerified);
+        } else {
+          this.wrongVerificationCode = true;
+        }
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
   }
 
   @HostListener('window:resize', ['$event'])

@@ -53,12 +53,18 @@
         class="d-flex justify-content-center align-items-center flex-column"
       >
         <input
-          type="number"
+          type="text"
           class="form-control mb-2"
           id="verificationCode"
           placeholder="Enter verification code"
           [formControl]="verificationCode"
         />
+        <div
+          *ngIf="verificationCode.touched && verificationCode.invalid"
+          class="text-danger"
+        >
+          Only numbers allowed
+        </div>
         <button class="btn btn-success" (click)="verifyCode()">
           Verify Code
         </button>
