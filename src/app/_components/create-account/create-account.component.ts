@@ -36,10 +36,10 @@ export class CreateAccountComponent implements OnInit {
   countdown = 45;
   showSuccessMessage = false;
 
-  verificationCode: FormControl<number | null> = new FormControl(
-    null,
+  verificationCode: FormControl<string | null> = new FormControl(null, [
     Validators.required,
-  );
+    Validators.pattern('^[0-9]*$'),
+  ]);
 
   firstName: FormControl<string | null> = new FormControl(
     null,
@@ -196,21 +196,19 @@ export class CreateAccountComponent implements OnInit {
 
     const phoneNumber = '+1' + phoneNumberValue.toString();
 
-    this.safTChildProxyService
-      .verifyPhoneNumber(phoneNumber, value.toString())
-      .subscribe({
-        next: (res) => {
-          if (res.status === 'approved') {
-            this.codeVerified = true;
-            console.log(this.codeVerified);
-          } else {
-            this.wrongVerificationCode = true;
-          }
-        },
-        error: (e) => {
-          console.log(e);
-        },
-      });
+    this.safTChildProxyService.verifyPhoneNumber(phoneNumber, value).subscribe({
+      next: (res) => {
+        if (res.status === 'approved') {
+          this.codeVerified = true;
+          console.log(this.codeVerified);
+        } else {
+          this.wrongVerificationCode = true;
+        }
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
   }
 
   // This will only be triggered when the formgroup is ready
